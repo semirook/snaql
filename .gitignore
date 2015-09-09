@@ -1,4 +1,7 @@
+/dist
+/build
 *.pyc
+*.egg-info
 .noseids
 .ropeproject
 .DS_Store

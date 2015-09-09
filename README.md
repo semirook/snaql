@@ -47,13 +47,13 @@ with name 'users_by_country' in this case.
 
 What's next?
 
-1. Import factory ```Snaql```:
+Import factory ```Snaql```:
 
 ```python
 from snaql.factory import Snaql
 ```
 
-2. Register SQL folder location:
+Register SQL folder location:
 
 ```python
 root_location = os.path.abspath(os.path.dirname(__file__))
@@ -62,13 +62,13 @@ snaql_factory = Snaql(root_location, 'queries')
 
 ```queries``` is a folder with SQL templates inside your root location. 
 
-3. Register SQL template file with queries:
+Register SQL template file with queries:
 
 ```python
 users_queries = snaql_factory.load_queries('users.sql')
 ```
 
-4. Get rendered SQL by it's meta-name:
+Get rendered SQL by it's meta-name:
 
 ```python
 your_sql = users_queries.users_by_country()
