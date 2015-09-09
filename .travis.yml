@@ -3,6 +3,8 @@ python:
   - "2.7"
   - "3.4"
 script: nosetests
+install:
+  - "pip install jinja2"
 notifications:
   email:
     - semirook@gmail.com
