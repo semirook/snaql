@@ -1,4 +1,4 @@
-# Snaql. Raw SQL queries from Python without pain
+# Snaql. Raw SQL queries from Python without pain [![Build Status](https://travis-ci.org/semirook/snaql.png)](https://travis-ci.org/semirook/snaql)
 
 Totally inspired by [Yesql](https://github.com/krisajenkins/yesql) from Clojure world. 
 But implemented in another way.
