@@ -25,3 +25,12 @@
         WHERE user_id IN ({{ users_ids|join(', ') }})
     {% endif %}
 {% endsql %}
+
+
+{% sql 'users_escaping', note='try to escape' %}
+    SELECT *
+    FROM user
+    {% if user_name %}
+        WHERE user_name = {{ user_name }}
+    {% endif %}
+{% endsql %}

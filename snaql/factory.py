@@ -10,6 +10,8 @@ from jinja2 import FileSystemLoader
 from jinja2.loaders import split_template_path
 from jinja2.utils import open_if_exists
 
+from snaql.convertors import escape_string
+
 
 class RawFileSystemLoader(FileSystemLoader):
 
@@ -100,7 +102,8 @@ class Snaql(object):
         def fn(**kwargs):
             if kwargs:
                 sql_tmpl = env.from_string(meta_struct['funcs'][name]['raw_sql'])
-                return sql_tmpl.render(**kwargs)
+                sql_raw = sql_tmpl.render(**kwargs)
+                return escape_string(sql_raw)
             return meta_struct['funcs'][name]['sql']
 
         fn.__doc__ = meta_struct['funcs'][name]['note']

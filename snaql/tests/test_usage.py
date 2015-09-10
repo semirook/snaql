@@ -58,3 +58,40 @@ class TestUseCases(unittest.TestCase):
                 "WHERE user_id IN (1, 2, 3) "
             )
         )
+
+    def test_escaping(self):
+        users_queries = self.snaql.load_queries('users.sql')
+
+        context = {'user_name': "'semirook';"}
+        self.assertEqual(
+                users_queries.users_escaping(**context), (
+                "SELECT * FROM user  "
+                "WHERE user_name = \\'semirook\\'; "
+            )
+        )
+
+    def test_clean_env(self):
+        users_queries = self.snaql.load_queries('users.sql')
+        self.assertEqual(
+            users_queries.select_all(), (
+                "SELECT * "
+                "FROM user"
+            )
+        )
+        self.assertFalse(self.snaql.jinja_env.sql_params)
+
+    def test_multiple_ns(self):
+        users_queries = self.snaql.load_queries('users.sql')
+        news_queries = self.snaql.load_queries('news.sql')
+        self.assertEqual(
+            users_queries.select_all(), (
+                "SELECT * "
+                "FROM user"
+            )
+        )
+        self.assertEqual(
+            news_queries.select_all(), (
+                "SELECT * "
+                "FROM news"
+            )
+        )
