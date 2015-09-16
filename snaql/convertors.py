@@ -34,7 +34,9 @@ def guard_integer(value):
     try:
         return int(value)
     except ValueError as e:
-        raise SnaqlGuardException(e.message)
+        raise SnaqlGuardException(
+            e.message if hasattr(e, 'message') else e.args[0]
+        )
 
 
 def guard_datetime(obj):
@@ -54,7 +56,9 @@ def guard_datetime(obj):
             )
         return fmt.format(obj)
     except (AttributeError, ValueError) as e:
-        raise SnaqlGuardException(e.message)
+        raise SnaqlGuardException(
+            e.message if hasattr(e, 'message') else e.args[0]
+        )
 
 
 def guard_date(obj):
@@ -66,7 +70,9 @@ def guard_date(obj):
     try:
         return fmt.format(obj)
     except (AttributeError, ValueError) as e:
-        raise SnaqlGuardException(e.message)
+        raise SnaqlGuardException(
+            e.message if hasattr(e, 'message') else e.args[0]
+        )
 
 
 def guard_float(value):
@@ -77,7 +83,9 @@ def guard_float(value):
         value = float(value)
         return '%.15g' % value
     except ValueError as e:
-        raise SnaqlGuardException(e.message)
+        raise SnaqlGuardException(
+            e.message if hasattr(e, 'message') else e.args[0]
+        )
 
 
 def guard_timedelta(obj):
@@ -95,7 +103,9 @@ def guard_timedelta(obj):
 
         return fmt.format(hours, minutes, seconds, obj.microseconds)
     except (AttributeError, ValueError):
-        raise SnaqlGuardException(e.message)
+        raise SnaqlGuardException(
+            e.message if hasattr(e, 'message') else e.args[0]
+        )
 
 
 def guard_time(obj):
@@ -110,7 +120,9 @@ def guard_time(obj):
 
         return fmt.format(obj)
     except (AttributeError, ValueError):
-        raise SnaqlGuardException(e.message)
+        raise SnaqlGuardException(
+            e.message if hasattr(e, 'message') else e.args[0]
+        )
 
 
 def guard_case(value, items=None):

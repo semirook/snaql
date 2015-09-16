@@ -139,15 +139,15 @@ class Snaql(object):
 
         def subrender_cond(owner_name, cond_func, context):
             if isinstance(cond_func, collections.Callable) and cond_func.is_cond:
-                if meta_struct['funcs'][cond_func.__name__]['cond_for'] != owner_name:
+                if meta_struct['funcs'][cond_func.func_name]['cond_for'] != owner_name:
                     raise SnaqlException(
                         '"%s" is not proper condition for "%s"' % (
-                            cond_func.__name__,
+                            cond_func.func_name,
                             owner_name
                         )
                     )
                 cond_tmpl = env.from_string(
-                    meta_struct['funcs'][cond_func.__name__]['raw_sql']
+                    meta_struct['funcs'][cond_func.func_name]['raw_sql']
                 )
                 return cond_tmpl.render(**context).strip()
             return cond_func
