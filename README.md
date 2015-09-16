@@ -329,4 +329,4 @@ def get_countries(ids=None, date_from=None, date_to=None):
     # ORDER BY creation_date ASC
 ```
 
-Simple, without DB clients dependencies (use what you need), works in Python 2 and 3. Try!
+Simple, without DB clients dependencies (use what you need). Try!
