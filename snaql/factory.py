@@ -165,7 +165,11 @@ class Snaql(object):
                         kwargs[point] = maybe_cond_sql
                     if (
                         isinstance(val, collections.Iterable)
-                        and not isinstance(val, types.StringTypes)
+                        and not isinstance(
+                            val, types.StringTypes
+                            if hasattr(types, 'StringTypes')
+                            else str
+                        )
                     ):
                         val = [subrender_cond(name, v, kwargs) for v in val]
                         kwargs[point] = [v for v in val if v]
