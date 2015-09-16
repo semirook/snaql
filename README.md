@@ -330,3 +330,5 @@ def get_countries(ids=None, date_from=None, date_to=None):
 ```
 
 Simple, without DB clients dependencies (use what you need). Try!
+
+Tested in Python 2.6, 2.7, 3.3, 3.4, 3.5
