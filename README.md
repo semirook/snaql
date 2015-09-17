@@ -48,11 +48,13 @@ an optional docstring for dynamically created function-generator
 with name 'users_by_country' in this case. You can use ```{% query %}{% endquery %}```
 block if your query is too far from SQL. It's just an alias and this block equals to previous.
 
+```
 {% query 'users_by_country', note='counts users' %}
     SELECT count(*) AS count
     FROM user
     WHERE country_code = ?
 {% endquery %}
+```
 
 What's next?
 
