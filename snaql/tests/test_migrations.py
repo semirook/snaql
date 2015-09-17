@@ -18,8 +18,8 @@ class TestMigrations(unittest.TestCase):
         call_order = [fn.func_name for fn in migrate_queries.ordered_blocks]
         # Both are possible, flavors and templates have no dependencies
         # and their order does not matter
-        self.assertIn(
-            call_order, (
+        self.assertTrue(
+            call_order in (
                 [
                     'create_flavors',
                     'create_templates',
