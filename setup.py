@@ -3,14 +3,14 @@ from setuptools import setup, find_packages
 
 setup(
     name='snaql',
-    version='0.2.1',
+    version='0.3',
     author='Roman Semirook',
     author_email='semirook@gmail.com',
     packages=find_packages(),
     license='MIT',
     url='https://github.com/semirook/snaql',
-    description='Transparant SQL usage without ORM',
-    long_description='Transparant SQL usage without ORM',
+    description='Transparant *QL usage without ORM',
+    long_description='Transparant *QL usage without ORM',
     install_requires=[
         'Jinja2==2.8',
     ],

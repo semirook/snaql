@@ -3,6 +3,7 @@ import os
 import re
 import copy
 import collections
+import itertools
 import types
 import sys
 from collections import namedtuple
@@ -63,7 +64,7 @@ class RawFileSystemLoader(FileSystemLoader):
 
 
 class JinjaSQLExtension(Extension):
-    tags = set(['sql'])
+    tags = set(['sql', 'query'])
 
     def parse(self, parser):
         lineno = next(parser.stream).lineno
@@ -74,17 +75,25 @@ class JinjaSQLExtension(Extension):
             # Optional 'note' for function docstring
             if (
                 parser.stream.current.type == 'name'
-                and parser.stream.current.value in ('note', 'cond_for')
+                and parser.stream.current.value
+                in ('note', 'cond_for', 'depends_on')
             ):
                 stream_type = parser.stream.current.value
                 next(parser.stream)
                 parser.stream.expect('assign')
-                c_expr = parser.parse_expression()
+                # Depends meta is always a list
+                if stream_type == 'depends_on':
+                    c_expr = parser.parse_list()
+                else:
+                    c_expr = parser.parse_expression()
                 args.append(c_expr)
                 kwargs.append(nodes.Keyword(stream_type, c_expr))
 
-        body = parser.parse_statements(['name:endsql'], drop_needle=True)
+        body = parser.parse_statements(
+            ['name:endsql', 'name:endquery'], drop_needle=True
+        )
         raw_template = self.environment.sql_params['raws'][parser.name]
+
         # Lines range of original raw template
         raw_lines = slice(lineno, parser.stream.current.lineno-1)
         self.environment.sql_params.setdefault('funcs', {}).update({
@@ -109,11 +118,22 @@ class JinjaSQLExtension(Extension):
             'sql': raw_sql,
             'note': kwargs.get('note'),
             'is_cond': 'cond_for' in kwargs,
+            'depends_on': kwargs.get('depends_on', []),
         })
         if origin['is_cond']:
             origin['cond_for'] = kwargs['cond_for']
 
         return raw_sql
+
+
+class SnaqlDepNode(object):
+
+    def __init__(self, name):
+        self.name = name
+        self.edges = []
+
+    def add_edge(self, node):
+        self.edges.append(node)
 
 
 class SnaqlException(Exception):
@@ -191,15 +211,53 @@ class Snaql(object):
 
         return fn
 
+    def gen_dep_graph(self, node, accum):
+        for edge in node.edges:
+            if edge not in accum:
+                self.gen_dep_graph(edge, accum)
+
+        accum.append(node)
+
+        return (n.name for n in accum)
+
     def load_queries(self, sql_path):
         template = self.jinja_env.get_template(sql_path)
         template.render()
 
         factory_methods = {}
         meta_struct = copy.deepcopy(self.jinja_env.sql_params)
-        for name, block in self.jinja_env.sql_params['funcs'].items():
+        blocks = set(meta_struct['funcs'])
+
+        for name, block in meta_struct['funcs'].items():
+            # Dependency graph building
+            node = SnaqlDepNode(name)
+            for dep in block['depends_on']:
+                if dep not in blocks:
+                    raise SnaqlException(
+                        '"%s" block not found in "%s"' % (dep, sql_path)
+                    )
+                node.add_edge(SnaqlDepNode(dep))
+
+            edges_accum = []
+            block['graph'] = self.gen_dep_graph(node, edges_accum)
             fn = self.gen_func(name, meta_struct, self.jinja_env)
             factory_methods[name] = fn
+
+        dep_graphs = (b['graph'] for b in meta_struct['funcs'].values())
+        visited_nodes = set()
+        union_nodes = []
+        # Flat dependency graph edges
+        flat_deps = list(itertools.chain(*dep_graphs))
+        # Lists union
+        for dep in flat_deps:
+            if dep not in visited_nodes:
+                union_nodes.append(dep)
+            visited_nodes.add(dep)
+
+        factory_methods['ordered_blocks'] = [
+            factory_methods[n]
+            for n in union_nodes
+        ]
 
         factory = namedtuple('SQLFactory', factory_methods.keys())
         struct = factory(*factory_methods.values())

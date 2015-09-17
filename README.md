@@ -1,4 +1,4 @@
-# Snaql. Raw SQL queries from Python without pain [![Build Status](https://travis-ci.org/semirook/snaql.png)](https://travis-ci.org/semirook/snaql)
+# Snaql. Raw \*QL queries in Python without pain [![Build Status](https://travis-ci.org/semirook/snaql.png)](https://travis-ci.org/semirook/snaql)
 
 Totally inspired by [Yesql](https://github.com/krisajenkins/yesql) from Clojure world. 
 But implemented in another way.
@@ -10,7 +10,10 @@ for DB queries building. And we don't need another layer above SQL to work with 
 or complicated DSLs. Feel free to use all of the SQL's power in your projects without mixing Python 
 code and SQL strings. Solution is very simple and flexible enough to try it in your next project. 
 Also, Snaql doesn't depend on DB clients, can be used in asynchronous handlers (Tornado, for example). 
-It's just a way to organize your queries and a bit of logic to change them with extra-context. Look at examples.
+It's just a way to organize your queries and a bit of logic to change them by context. Look at examples.
+
+Actually, Snaql doesn't care about stuff you want to build. SQL, SPARQL, SphinxQL, CQL etc., 
+you can build any query for any DB or search engine. Freedom.
 
 ## Installation
 
@@ -22,15 +25,14 @@ $ pip install snaql
 
 ## Examples
 
-Create some folder and related namespace-files with your future SQL-queries. 
-Like this, for example:
+Create some folder and related namespace-files with your future queries. Like this, for example:
 
 ```
 /queries
     users.sql
 ```
 
-Prepare some SQL inside ```users.sql``` using block ```sql``` 
+Prepare some SQL queries inside ```users.sql``` using block ```sql``` 
 (Snaql is based on Jinja2 template engine and you can use it features):
 
 ```
@@ -41,9 +43,16 @@ Prepare some SQL inside ```users.sql``` using block ```sql```
 {% endsql %}
 ```
 
-Yes, that's it. SQL is inside ```sql``` block and ```note``` is 
-optional, it's docstring for dynamically created function-generator
-with name 'users_by_country' in this case.
+Yes, that's it. Your SQL is inside ```sql``` block and ```note``` is 
+an optional docstring for dynamically created function-generator
+with name 'users_by_country' in this case. You can use ```{% query %}{% endquery %}```
+block if your query is too far from SQL. It's just an alias and this block equals to previous.
+
+{% query 'users_by_country', note='counts users' %}
+    SELECT count(*) AS count
+    FROM user
+    WHERE country_code = ?
+{% endquery %}
 
 What's next?
 
@@ -59,8 +68,6 @@ Register SQL folder location:
 root_location = os.path.abspath(os.path.dirname(__file__))
 snaql_factory = Snaql(root_location, 'queries')
 ```
-
-```queries``` is a folder with SQL templates inside your root location. 
 
 Register SQL template file with queries:
 
@@ -78,7 +85,7 @@ your_sql = users_queries.users_by_country()
 # WHERE country_code = ?
 ```
 
-Cool! No?.. Hm, maybe you need some more flexibility? Remember, SQL templates 
+Cool! No?.. Hm, maybe you need some more flexibility? Remember, query blocks
 are Jinja-powered and you can render them with some context. Example:
 
 ```
@@ -202,6 +209,8 @@ def get_countries(ids=None, date_from=None, date_to=None):
     if date_to:
         sql_context['date_to'] = date_to  # + date format 'YYYY-MM-DD'
 
+    country_queries = snaql_factory.load_queries('country.sql')
+
     return country_queries.get_countries_by_conds(**sql_context)
 ```
 
@@ -256,6 +265,8 @@ def get_countries(ids=None, date_from=None, date_to=None):
     if date_to:
         cond = country_queries.cond_date_to_countries(date_to=date_to)
         sql_conditions.append(cond)
+
+    country_queries = snaql_factory.load_queries('country.sql')
 
     return country_queries.get_countries(conditions=sql_conditions)
 ```
@@ -320,6 +331,8 @@ def get_countries(ids=None, date_from=None, date_to=None):
     # note, you don't call conditions functions explicitly,
     # Snaql will do that during main block rendering
     # with relations checks and escapes final result
+
+    country_queries = snaql_factory.load_queries('country.sql')
     return country_queries.get_countries_by_conds(
         conditions=[
             country_queries.cond_ids_in_countries,
@@ -334,6 +347,73 @@ def get_countries(ids=None, date_from=None, date_to=None):
     # SELECT * FROM news WHERE id IN (1, 2, 3) 
     # AND WHERE creation_date >= \\'2015-09-17\\'
     # ORDER BY creation_date ASC
+```
+
+## Blocks order
+
+There are cases when queries order matters. Like tables creation, for example.
+And Snaql has solution to mark blocks dependencies with ```depends_on``` list.
+
+```
+{% query 'create_nodes', depends_on=['create_templates', 'create_flavors'] %}
+    CREATE TABLE nodes (
+        id VARCHAR(50) NOT NULL, 
+        type VARCHAR(6), 
+        properties VARCHAR(1024), 
+        template_id VARCHAR(36), 
+        flavor_id VARCHAR(36), 
+        PRIMARY KEY (id), 
+        FOREIGN KEY(template_id) REFERENCES templates (id), 
+        FOREIGN KEY(flavor_id) REFERENCES flavors (id)
+    )
+{% endquery %}
+```
+
+```
+{% query 'create_templates' %}
+    CREATE TABLE templates (
+        id VARCHAR(36) NOT NULL, 
+        type VARCHAR(20), 
+        name VARCHAR(50), 
+        properties VARCHAR(1024), 
+        PRIMARY KEY (id)
+    )
+{% endquery %}
+```
+
+```
+{% query 'create_clusters', depends_on=['create_templates', 'create_nodes'] %}
+    CREATE TABLE clusters (
+        id VARCHAR(50) NOT NULL, 
+        name VARCHAR(50), 
+        template_id VARCHAR(36), 
+        FOREIGN KEY(template_id) REFERENCES templates (id)
+    )
+{% endquery %}
+```
+
+```
+{% query 'create_flavors' %}
+    CREATE TABLE flavors (
+        id VARCHAR(36) NOT NULL, 
+        properties VARCHAR(1024), 
+        PRIMARY KEY (id)
+    )
+{% endquery %}
+```
+Correct execution order can be fetched with special ```ordered_blocks``` attribute.
+
+```python
+    migrate_queries = snaql_factory.load_queries('migrations.sql')
+    solution = migrate_queries.ordered_blocks
+    
+    # It is a list of ordered functions like
+    solution = [
+        create_flavors_fn
+        create_templates_fn,
+        create_nodes_fn,
+        create_clusters_fn,
+    ]
 ```
 
 Simple, without DB clients dependencies (use what you need). Try!
