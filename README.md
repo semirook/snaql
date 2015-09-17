@@ -157,11 +157,13 @@ Technically they are custom Jinja filters and can be used as usual.
 {% endsql %}
 ```
 
+```
 {% sql 'select_by_slug' %}
     SELECT *
     FROM news
     WHERE slug = '{{ slug|guards.regexp("^[A-Za-z][A-Za-z0-9_]{7,15}") }}'
 {% endsql %}
+```
 
 Each guard produces ```SnaqlGuardException``` if something goes wrong.
 
