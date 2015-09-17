@@ -34,9 +34,7 @@ def guard_integer(value):
     try:
         return int(value)
     except ValueError as e:
-        raise SnaqlGuardException(
-            e.message if hasattr(e, 'message') else e.args[0]
-        )
+        raise SnaqlGuardException(e.args[0])
 
 
 def guard_datetime(obj):
@@ -56,9 +54,7 @@ def guard_datetime(obj):
             )
         return fmt.format(obj)
     except (AttributeError, ValueError) as e:
-        raise SnaqlGuardException(
-            e.message if hasattr(e, 'message') else e.args[0]
-        )
+        raise SnaqlGuardException(e.args[0])
 
 
 def guard_date(obj):
@@ -70,9 +66,7 @@ def guard_date(obj):
     try:
         return fmt.format(obj)
     except (AttributeError, ValueError) as e:
-        raise SnaqlGuardException(
-            e.message if hasattr(e, 'message') else e.args[0]
-        )
+        raise SnaqlGuardException(e.args[0])
 
 
 def guard_float(value):
@@ -83,9 +77,7 @@ def guard_float(value):
         value = float(value)
         return '%.15g' % value
     except ValueError as e:
-        raise SnaqlGuardException(
-            e.message if hasattr(e, 'message') else e.args[0]
-        )
+        raise SnaqlGuardException(e.args[0])
 
 
 def guard_timedelta(obj):
@@ -103,9 +95,7 @@ def guard_timedelta(obj):
 
         return fmt.format(hours, minutes, seconds, obj.microseconds)
     except (AttributeError, ValueError):
-        raise SnaqlGuardException(
-            e.message if hasattr(e, 'message') else e.args[0]
-        )
+        raise SnaqlGuardException(e.args[0])
 
 
 def guard_time(obj):
@@ -120,9 +110,7 @@ def guard_time(obj):
 
         return fmt.format(obj)
     except (AttributeError, ValueError):
-        raise SnaqlGuardException(
-            e.message if hasattr(e, 'message') else e.args[0]
-        )
+        raise SnaqlGuardException(e.args[0])
 
 
 def guard_case(value, items=None):
@@ -136,6 +124,18 @@ def guard_case(value, items=None):
     items = set(items)
     if value not in items:
         raise SnaqlGuardException(
-            '%s expected, %s is bad value' % (', '.join(items), value)
+            '%s expected, "%s" is bad value' % (', '.join(items), value)
         )
     return value
+
+
+def guard_regexp(value, regexp):
+    if not value:
+        return value
+
+    if re.match(regexp, value):
+        return value
+    else:
+        raise SnaqlGuardException(
+            '"%s" does not match "%s" expression' % (value, regexp)
+        )

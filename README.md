@@ -125,6 +125,7 @@ guards.datetime       | Converts datetime object to formatted string YYYY-MM-DD 
 guards.date           | Converts date object to formatted string YYYY-MM-DD              |
 guards.time           | Converts time object to formatted string HH:MI:SS                |
 guards.case           | Checks if value is in the case list                              |
+guards.regexp         | Checks if value matches regular expression                       |
 
 
 Technically they are custom Jinja filters and can be used as usual.
@@ -146,6 +147,12 @@ Technically they are custom Jinja filters and can be used as usual.
     {% endif %}
 {% endsql %}
 ```
+
+{% sql 'select_by_slug' %}
+    SELECT *
+    FROM news
+    WHERE slug = '{{ slug|guards.regexp("^[A-Za-z][A-Za-z0-9_]{7,15}") }}'
+{% endsql %}
 
 Each guard produces ```SnaqlGuardException``` if something goes wrong.
 

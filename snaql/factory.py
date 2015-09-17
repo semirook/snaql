@@ -4,6 +4,7 @@ import re
 import copy
 import collections
 import types
+import sys
 from collections import namedtuple
 
 from jinja2 import nodes
@@ -23,7 +24,12 @@ from snaql.convertors import (
     guard_timedelta,
     guard_time,
     guard_case,
+    guard_regexp,
 )
+
+
+PY = sys.version_info
+PY3K = PY >= (3, 0, 0)
 
 
 class RawFileSystemLoader(FileSystemLoader):
@@ -132,6 +138,7 @@ class Snaql(object):
             'guards.timedelta': guard_timedelta,
             'guards.time': guard_time,
             'guards.case': guard_case,
+            'guards.regexp': guard_regexp,
         })
         self.jinja_env.extend(sql_params={})
 
@@ -166,9 +173,7 @@ class Snaql(object):
                     if (
                         isinstance(val, collections.Iterable)
                         and not isinstance(
-                            val, types.StringTypes
-                            if hasattr(types, 'StringTypes')
-                            else str
+                            val, str if PY3K else types.StringTypes
                         )
                     ):
                         val = [subrender_cond(name, v, kwargs) for v in val]

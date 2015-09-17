@@ -72,6 +72,21 @@ class TestGuards(unittest.TestCase):
             'SELECT * FROM news   ORDER BY creation_date ASC'
         )
 
+    def test_guard_regexp(self):
+        news_queries = self.snaql.load_queries('news.sql')
+        self.assertEqual(
+            news_queries.select_by_slug(slug='latest_news'),
+            "SELECT * FROM news WHERE slug = \\'latest_news\\'"
+        )
+
+    def test_guard_exc(self):
+        news_queries = self.snaql.load_queries('news.sql')
+        self.assertRaises(
+            SnaqlGuardException,
+            news_queries.select_by_slug,
+            slug='latest news',
+        )
+
     def test_conditions_sugar_without_context(self):
         news_queries = self.snaql.load_queries('news.sql')
         response = news_queries.get_news(conditions=[

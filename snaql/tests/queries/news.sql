@@ -45,3 +45,9 @@
         WHERE creation_date = {{ date_to|guards.date }}
     {% endif %}
 {% endsql %}
+
+{% sql 'select_by_slug' %}
+    SELECT *
+    FROM news
+    WHERE slug = '{{ slug|guards.regexp("^[A-Za-z][A-Za-z0-9_]{7,15}") }}'
+{% endsql %}
