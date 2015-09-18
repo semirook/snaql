@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='snaql',
-    version='0.3',
+    version='0.3.1',
     author='Roman Semirook',
     author_email='semirook@gmail.com',
     packages=find_packages(),

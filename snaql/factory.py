@@ -228,32 +228,33 @@ class Snaql(object):
         meta_struct = copy.deepcopy(self.jinja_env.sql_params)
         blocks = set(meta_struct['funcs'])
 
+        node = SnaqlDepNode('root')
         for name, block in meta_struct['funcs'].items():
             # Dependency graph building
-            node = SnaqlDepNode(name)
+            _node = SnaqlDepNode(name)
             for dep in block['depends_on']:
                 if dep not in blocks:
                     raise SnaqlException(
                         '"%s" block not found in "%s"' % (dep, sql_path)
                     )
-                node.add_edge(SnaqlDepNode(dep))
+                _node.add_edge(SnaqlDepNode(dep))
+            node.add_edge(_node)
 
-            edges_accum = []
-            block['graph'] = self.gen_dep_graph(node, edges_accum)
             fn = self.gen_func(name, meta_struct, self.jinja_env)
             factory_methods[name] = fn
 
-        dep_graphs = (b['graph'] for b in meta_struct['funcs'].values())
+        edges_accum = []
+        graph = self.gen_dep_graph(node, edges_accum)
+
         visited_nodes = set()
         union_nodes = []
-        # Flat dependency graph edges
-        flat_deps = list(itertools.chain(*dep_graphs))
         # Lists union
-        for dep in flat_deps:
+        for dep in graph:
             if dep not in visited_nodes:
                 union_nodes.append(dep)
             visited_nodes.add(dep)
 
+        union_nodes.pop()  # root node
         factory_methods['ordered_blocks'] = [
             factory_methods[n]
             for n in union_nodes
