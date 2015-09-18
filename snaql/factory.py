@@ -229,7 +229,10 @@ class Snaql(object):
         blocks = set(meta_struct['funcs'])
 
         node = SnaqlDepNode('root')
-        for name, block in meta_struct['funcs'].items():
+        for name, block in sorted(
+            meta_struct['funcs'].items(),
+            key=lambda pair: len(pair[1]['depends_on']),
+        ):
             # Dependency graph building
             _node = SnaqlDepNode(name)
             for dep in block['depends_on']:
