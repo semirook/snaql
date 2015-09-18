@@ -11,7 +11,7 @@
     )
 {% endquery %}
 
-{% query 'create_templates' %}
+{% query 'create_templates', depends_on=['create_flavors'] %}
     CREATE TABLE templates (
         id VARCHAR(36) NOT NULL, 
         type VARCHAR(20), 

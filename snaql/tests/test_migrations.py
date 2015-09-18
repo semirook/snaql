@@ -16,21 +16,11 @@ class TestMigrations(unittest.TestCase):
     def test_guard_integer_exc(self):
         migrate_queries = self.snaql.load_queries('migrations.sql')
         call_order = [fn.func_name for fn in migrate_queries.ordered_blocks]
-        # Both are possible, flavors and templates have no dependencies
-        # and their order does not matter
-        self.assertTrue(
-            call_order in (
-                [
-                    'create_flavors',
-                    'create_templates',
-                    'create_nodes',
-                    'create_clusters'
-                ],
-                [
-                    'create_templates',
-                    'create_flavors',
-                    'create_nodes',
-                    'create_clusters'
-                ],
-            )
+        self.assertEqual(
+            call_order, [
+                'create_flavors',
+                'create_templates',
+                'create_nodes',
+                'create_clusters'
+            ],
         )
