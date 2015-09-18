@@ -11,7 +11,7 @@
     )
 {% endquery %}
 
-{% query 'create_templates', depends_on=['create_flavors'] %}
+{% query 'create_templates' %}
     CREATE TABLE templates (
         id VARCHAR(36) NOT NULL, 
         type VARCHAR(20), 
@@ -21,7 +21,7 @@
     )
 {% endquery %}
 
-{% query 'create_clusters', depends_on=['create_templates', 'create_nodes'] %}
+{% query 'create_clusters', depends_on=['create_templates'] %}
     CREATE TABLE clusters (
         id VARCHAR(50) NOT NULL, 
         name VARCHAR(50), 
@@ -30,10 +30,17 @@
     )
 {% endquery %}
 
-{% query 'create_flavors' %}
+{% query 'create_flavors', depends_on=['create_dummy'] %}
     CREATE TABLE flavors (
         id VARCHAR(36) NOT NULL, 
         properties VARCHAR(1024), 
+        PRIMARY KEY (id)
+    )
+{% endquery %}
+
+{% query 'create_dummy', depends_on=['create_templates'] %}
+    CREATE TABLE dummy (
+        id VARCHAR(36) NOT NULL, 
         PRIMARY KEY (id)
     )
 {% endquery %}

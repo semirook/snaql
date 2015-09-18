@@ -119,6 +119,7 @@ class JinjaSQLExtension(Extension):
             'note': kwargs.get('note'),
             'is_cond': 'cond_for' in kwargs,
             'depends_on': kwargs.get('depends_on', []),
+            'node': None,
         })
         if origin['is_cond']:
             origin['cond_for'] = kwargs['cond_for']
@@ -134,6 +135,12 @@ class SnaqlDepNode(object):
 
     def add_edge(self, node):
         self.edges.append(node)
+
+    def __str__(self):
+        return '<SnaqlDepNode %s>' % self.name
+
+    def __repr__(self):
+        return '<SnaqlDepNode %s>' % self.name
 
 
 class SnaqlException(Exception):
@@ -218,7 +225,7 @@ class Snaql(object):
 
         accum.append(node)
 
-        return (n.name for n in accum)
+        return accum
 
     def load_queries(self, sql_path):
         template = self.jinja_env.get_template(sql_path)
@@ -229,38 +236,32 @@ class Snaql(object):
         blocks = set(meta_struct['funcs'])
 
         node = SnaqlDepNode('root')
-        for name, block in sorted(
-            meta_struct['funcs'].items(),
-            key=lambda pair: len(pair[1]['depends_on']),
-        ):
+
+        for name, block in meta_struct['funcs'].items():
             # Dependency graph building
-            _node = SnaqlDepNode(name)
+            block['node'] = block['node'] or SnaqlDepNode(name)
             for dep in block['depends_on']:
                 if dep not in blocks:
                     raise SnaqlException(
                         '"%s" block not found in "%s"' % (dep, sql_path)
                     )
-                _node.add_edge(SnaqlDepNode(dep))
-            node.add_edge(_node)
+                if meta_struct['funcs'][dep]['node'] is None:
+                    meta_struct['funcs'][dep]['node'] = SnaqlDepNode(dep)
+
+                block['node'].add_edge(meta_struct['funcs'][dep]['node'])
+
+            node.add_edge(block['node'])
 
             fn = self.gen_func(name, meta_struct, self.jinja_env)
             factory_methods[name] = fn
 
         edges_accum = []
         graph = self.gen_dep_graph(node, edges_accum)
+        graph.pop()  # root node
 
-        visited_nodes = set()
-        union_nodes = []
-        # Lists union
-        for dep in graph:
-            if dep not in visited_nodes:
-                union_nodes.append(dep)
-            visited_nodes.add(dep)
-
-        union_nodes.pop()  # root node
         factory_methods['ordered_blocks'] = [
-            factory_methods[n]
-            for n in union_nodes
+            factory_methods[n.name]
+            for n in graph
         ]
 
         factory = namedtuple('SQLFactory', factory_methods.keys())
