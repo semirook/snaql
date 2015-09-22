@@ -26,10 +26,10 @@ class TestGuards(unittest.TestCase):
             ), (
                 "SELECT * FROM news "
                 "WHERE id = 10 "
-                "AND WHERE creation_date >= "
+                "AND creation_date >= "
                 "\\'{0.year:04}-{0.month:02}-{0.day:02} "
                 "{0.hour:02}:{0.minute:02}:{0.second:02}.{0.microsecond:06}\\' "
-                "AND WHERE rating >= 5.6"
+                "AND rating >= 5.6"
             ).format(date)
         )
 
@@ -112,7 +112,7 @@ class TestGuards(unittest.TestCase):
         self.assertEqual(
             response, (
                 "SELECT * FROM news  WHERE id IN (1, 2, 3) "
-                "AND WHERE creation_date >= "
+                "AND creation_date >= "
                 "\\'{0.year:04}-{0.month:02}-{0.day:02}\\'   "
                 "ORDER BY creation_date ASC"
             ).format(today)

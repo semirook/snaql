@@ -194,10 +194,10 @@ To describe this logic in Snaql way we need to provide too verbose template.
         WHERE id IN ({{ ids|join(', ') }})
     {% endif %}
     {% if date_from %}
-        {% if ids %} AND {% endif %} WHERE creation_date >= {{ date_from }}
+        {% if ids %} AND {% endif %} creation_date >= {{ date_from }}
     {% endif %}
     {% if date_to %}
-        {% if ids or date_from %} AND {% endif %} WHERE creation_date <= {{ date_to }}
+        {% if ids or date_from %} AND {% endif %} creation_date <= {{ date_to }}
     {% endif %}
     ORDER BY creation_date ASC
 {% endsql %}
@@ -227,7 +227,7 @@ way to organize SQL blocks here. Separate conditions blocks.
     SELECT *
     FROM countries
     {% if conditions %}
-        {{ conditions|join(' AND ') }}
+        WHERE {{ conditions|join(' AND ') }}
     {% endif %}
     ORDER BY creation_date ASC
 {% endsql %}
@@ -236,7 +236,7 @@ way to organize SQL blocks here. Separate conditions blocks.
 ```
 {% sql 'cond_ids_in_countries' %}
     {% if ids %}
-        WHERE id IN ({{ ids|join(', ') }})
+        id IN ({{ ids|join(', ') }})
     {% endif %}
 {% endsql %}
 ```
@@ -244,7 +244,7 @@ way to organize SQL blocks here. Separate conditions blocks.
 ```
 {% sql 'cond_date_from_countries' %}
     {% if date_from %}
-        WHERE creation_date >= {{ date_from }}
+        creation_date >= {{ date_from }}
     {% endif %}
 {% endsql %}
 ```
@@ -252,7 +252,7 @@ way to organize SQL blocks here. Separate conditions blocks.
 ```
 {% sql 'cond_date_to_countries' %}
     {% if date_to %}
-        WHERE creation_date <= {{ date_to }}
+        creation_date <= {{ date_to }}
     {% endif %}
 {% endsql %}
 ```
@@ -283,7 +283,7 @@ organize your conditions related to the base query. Let's rewrite our example on
     SELECT *
     FROM countries
     {% if conditions %}
-        {{ conditions|join(' AND ') }}
+        WHERE {{ conditions|join(' AND ') }}
     {% endif %}
     ORDER BY creation_date ASC
 {% endsql %}
@@ -294,7 +294,7 @@ Nothing changed here. But mark conditions with special ```cond_for``` parameter.
 ```
 {% sql 'cond_ids_in_countries', cond_for='get_countries' %}
     {% if ids %}
-        WHERE id IN ({{ ids|join(', ') }})
+        id IN ({{ ids|join(', ') }})
     {% endif %}
 {% endsql %}
 ```
@@ -302,7 +302,7 @@ Nothing changed here. But mark conditions with special ```cond_for``` parameter.
 ```
 {% sql 'cond_date_from_countries', cond_for='get_countries' %}
     {% if date_from %}
-        WHERE creation_date >= {{ date_from|guards.date }}
+        creation_date >= {{ date_from|guards.date }}
     {% endif %}
 {% endsql %}
 ```
@@ -310,7 +310,7 @@ Nothing changed here. But mark conditions with special ```cond_for``` parameter.
 ```
 {% sql 'cond_date_to_countries', cond_for='get_countries' %}
     {% if date_to %}
-        WHERE creation_date <= {{ date_to|guards.date }}
+        creation_date <= {{ date_to|guards.date }}
     {% endif %}
 {% endsql %}
 ```
@@ -349,7 +349,7 @@ def get_countries(ids=None, date_from=None, date_to=None):
     # and date_to is None, you'll get something like this:
     # 
     # SELECT * FROM news WHERE id IN (1, 2, 3) 
-    # AND WHERE creation_date >= \\'2015-09-17\\'
+    # AND creation_date >= \\'2015-09-17\\'
     # ORDER BY creation_date ASC
 ```
 
