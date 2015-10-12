@@ -128,6 +128,7 @@ Provides simple template variables guards to check or convert values to specific
 
 **Guard name**        | **Description**                                                  |
 ----------------------|------------------------------------------------------------------|
+guards.string         | Escapes string variable and surrounds it with quotes             |
 guards.integer        | If value is string, tries to convert it to int()                 |
 guards.float          | If value is string, tries to convert it to float()               |
 guards.datetime       | Converts datetime object to formatted string YYYY-MM-DD HH:MI:SS |
