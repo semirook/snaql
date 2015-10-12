@@ -16,7 +16,6 @@ from jinja2.loaders import split_template_path
 from jinja2.utils import open_if_exists
 
 from snaql.convertors import (
-    escape_string,
     guard_string,
     guard_integer,
     guard_date,
@@ -207,8 +206,7 @@ class Snaql(object):
                         kwargs[point] = [v for v in val if v]
 
                 sql_tmpl = env.from_string(meta_struct['funcs'][name]['raw_sql'])
-                sql_raw = sql_tmpl.render(**kwargs).strip()
-                return escape_string(sql_raw)
+                return sql_tmpl.render(**kwargs).strip()
 
             return meta_struct['funcs'][name]['sql']
 

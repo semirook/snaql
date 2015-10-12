@@ -27,8 +27,8 @@ class TestGuards(unittest.TestCase):
                 "SELECT * FROM news "
                 "WHERE id = 10 "
                 "AND creation_date >= "
-                "\\'{0.year:04}-{0.month:02}-{0.day:02} "
-                "{0.hour:02}:{0.minute:02}:{0.second:02}.{0.microsecond:06}\\' "
+                "'{0.year:04}-{0.month:02}-{0.day:02} "
+                "{0.hour:02}:{0.minute:02}:{0.second:02}.{0.microsecond:06}' "
                 "AND rating >= 5.6"
             ).format(date)
         )
@@ -76,7 +76,7 @@ class TestGuards(unittest.TestCase):
         news_queries = self.snaql.load_queries('news.sql')
         self.assertEqual(
             news_queries.select_by_slug(slug='latest_news'),
-            "SELECT * FROM news WHERE slug = \\'latest_news\\'"
+            "SELECT * FROM news WHERE slug = 'latest_news'"
         )
 
     def test_guard_exc(self):
@@ -113,7 +113,7 @@ class TestGuards(unittest.TestCase):
             response, (
                 "SELECT * FROM news  WHERE id IN (1, 2, 3) "
                 "AND creation_date >= "
-                "\\'{0.year:04}-{0.month:02}-{0.day:02}\\'   "
+                "'{0.year:04}-{0.month:02}-{0.day:02}'   "
                 "ORDER BY creation_date ASC"
             ).format(today)
         )

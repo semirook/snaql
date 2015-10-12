@@ -63,11 +63,11 @@ class TestUseCases(unittest.TestCase):
     def test_escaping(self):
         users_queries = self.snaql.load_queries('users.sql')
 
-        context = {'user_name': "'semirook';"}
+        context = {'user_name': "semirook"}
         self.assertEqual(
                 users_queries.users_escaping(**context), (
                 "SELECT * FROM user  "
-                "WHERE user_name = \\'semirook\\';"
+                "WHERE user_name = 'semirook'"
             )
         )
 

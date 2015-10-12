@@ -31,6 +31,6 @@
     SELECT *
     FROM user
     {% if user_name %}
-        WHERE user_name = {{ user_name }}
+        WHERE user_name = {{ user_name|guards.string }}
     {% endif %}
 {% endsql %}

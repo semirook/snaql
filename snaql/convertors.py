@@ -15,17 +15,14 @@ class SnaqlGuardException(Exception):
 
 
 def escape_string(value):
-    return (
-        ESCAPE_REGEX.sub(
-            lambda match: ESCAPE_MAP.get(match.group(0)), value)
-    )
+    return ESCAPE_REGEX.sub(lambda match: ESCAPE_MAP.get(match.group(0)), value)
 
 
 def guard_string(value):
     if not value:
         return value
 
-    return "%s" % escape_string(value)
+    return "'%s'" % escape_string(value)
 
 
 def guard_integer(value):
@@ -75,7 +72,7 @@ def guard_float(value):
 
     try:
         value = float(value)
-        return '%.15g' % value
+        return "%.15g" % value
     except ValueError as e:
         raise SnaqlGuardException(e.args[0])
 

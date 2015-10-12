@@ -334,7 +334,7 @@ def get_countries(ids=None, date_from=None, date_to=None):
 
     # note, you don't call conditions functions explicitly,
     # Snaql will do that during main block rendering
-    # with relations checks and escapes final result
+    # with relations checks
 
     country_queries = snaql_factory.load_queries('country.sql')
     return country_queries.get_countries_by_conds(
@@ -349,7 +349,7 @@ def get_countries(ids=None, date_from=None, date_to=None):
     # and date_to is None, you'll get something like this:
     # 
     # SELECT * FROM news WHERE id IN (1, 2, 3) 
-    # AND creation_date >= \\'2015-09-17\\'
+    # AND creation_date >= '2015-09-17'
     # ORDER BY creation_date ASC
 ```
 
