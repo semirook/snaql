@@ -111,4 +111,6 @@ class TestUseCases(unittest.TestCase):
         self.assertEqual(result_list, '[1, 2, 3]')
 
         result_dict = queries.simple_tmpl(var={'a': 1, 'b': 2})
-        self.assertEqual(result_dict, "{'a': 1, 'b': 2}")
+        self.assertTrue(
+            result_dict in ("{'a': 1, 'b': 2}", "{'b': 2, 'a': 1}")
+        )
