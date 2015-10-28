@@ -17,7 +17,6 @@
     {% endif %}
 {% endsql %}
 
-
 {% sql 'users_select_cond', note='select users with condition' %}
     SELECT *
     FROM user
@@ -25,7 +24,6 @@
         WHERE user_id IN ({{ users_ids|join(', ') }})
     {% endif %}
 {% endsql %}
-
 
 {% sql 'users_escaping', note='try to escape' %}
     SELECT *

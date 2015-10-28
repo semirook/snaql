@@ -17,9 +17,12 @@
     VALUES ({{ id|guards.integer }}, {{ name|guards.string }}, {{ age|guards.integer }}, {{ instrument|guards.string }});
 {% endquery %}
 
-
 {% sql 'get_artists', note='get artists' %}
     SELECT name, age, instrument
     FROM artists
     WHERE id = {{ id }};
+{% endsql %}
+
+{% sql 'simple_tmpl' %}
+    {{ var }}
 {% endsql %}

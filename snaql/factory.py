@@ -199,7 +199,7 @@ class Snaql(object):
                     if (
                         isinstance(val, collections.Iterable)
                         and not isinstance(
-                            val, str if PY3K else types.StringTypes
+                            val, (str if PY3K else types.StringTypes, dict)
                         )
                     ):
                         val = [subrender_cond(name, v, kwargs) for v in val]

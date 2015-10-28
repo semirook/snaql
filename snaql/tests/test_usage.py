@@ -104,3 +104,11 @@ class TestUseCases(unittest.TestCase):
             date_from=datetime.datetime.now(),
             rating='5.6',
         )
+
+    def test_simple_tmpl(self):
+        queries = self.snaql.load_queries('integration.sql')
+        result_list = queries.simple_tmpl(var=[1, 2, 3])
+        self.assertEqual(result_list, '[1, 2, 3]')
+
+        result_dict = queries.simple_tmpl(var={'a': 1, 'b': 2})
+        self.assertEqual(result_dict, "{'a': 1, 'b': 2}")
