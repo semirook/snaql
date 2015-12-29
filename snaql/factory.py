@@ -9,9 +9,8 @@ import sys
 from collections import namedtuple
 
 from jinja2 import nodes
+from jinja2 import Environment, TemplateNotFound, FileSystemLoader
 from jinja2.ext import Extension
-from jinja2 import Environment
-from jinja2 import FileSystemLoader
 from jinja2.loaders import split_template_path
 from jinja2.utils import open_if_exists
 
