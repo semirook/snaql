@@ -35,7 +35,7 @@ Create some folder and related namespace-files with your future queries. Like th
 Prepare some SQL queries inside ```users.sql``` using block ```sql``` 
 (Snaql is based on Jinja2 template engine and you can use it features):
 
-```
+```django
 {% sql 'users_by_country', note='counts users' %}
     SELECT count(*) AS count
     FROM user
@@ -48,7 +48,7 @@ an optional docstring for dynamically created function-generator
 with name 'users_by_country' in this case. You can use ```{% query %}{% endquery %}```
 block if your query is too far from SQL. It's just an alias and this block equals to previous.
 
-```
+```django
 {% query 'users_by_country', note='counts users' %}
     SELECT count(*) AS count
     FROM user
@@ -90,7 +90,7 @@ your_sql = users_queries.users_by_country()
 Cool! No?.. Hm, maybe you need some more flexibility? Remember, query blocks
 are Jinja-powered and you can render them with some context. Example:
 
-```
+```django
 # users.sql, you can add as many sql blocks in a single file as you need
 
 {% sql 'users_select_cond', note='select users with condition' %}
@@ -140,7 +140,7 @@ guards.regexp         | Checks if value matches regular expression              
 
 Technically they are custom Jinja filters and can be used as usual.
 
-```
+```django
 {% sql 'select_by_id' %}
     SELECT *
     FROM news
@@ -148,7 +148,7 @@ Technically they are custom Jinja filters and can be used as usual.
 {% endsql %}
 ```
 
-```
+```django
 {% sql 'get_news', note='get news by conditions' %}
     SELECT *
     FROM news
@@ -158,7 +158,7 @@ Technically they are custom Jinja filters and can be used as usual.
 {% endsql %}
 ```
 
-```
+```django
 {% sql 'select_by_slug' %}
     SELECT *
     FROM news
@@ -187,7 +187,7 @@ def get_countries(ids=None, date_from=None, date_to=None):
 
 To describe this logic in Snaql way we need to provide too verbose template.
 
-```
+```django
 {% sql 'get_countries_by_conds', note='get countries by date conditions or ids' %}
     SELECT *
     FROM countries
@@ -223,7 +223,7 @@ It's very error-prone, due to we need to check every variable presence and diffe
 flow combinations. Imagine we have more complicated subquiries building! There is another 
 way to organize SQL blocks here. Separate conditions blocks.
 
-```
+```django
 {% sql 'get_countries', note='get countries' %}
     SELECT *
     FROM countries
@@ -234,7 +234,7 @@ way to organize SQL blocks here. Separate conditions blocks.
 {% endsql %}
 ```
 
-```
+```django
 {% sql 'cond_ids_in_countries' %}
     {% if ids %}
         id IN ({{ ids|join(', ') }})
@@ -242,7 +242,7 @@ way to organize SQL blocks here. Separate conditions blocks.
 {% endsql %}
 ```
 
-```
+```django
 {% sql 'cond_date_from_countries' %}
     {% if date_from %}
         creation_date >= {{ date_from }}
@@ -250,7 +250,7 @@ way to organize SQL blocks here. Separate conditions blocks.
 {% endsql %}
 ```
 
-```
+```django
 {% sql 'cond_date_to_countries' %}
     {% if date_to %}
         creation_date <= {{ date_to }}
@@ -279,7 +279,7 @@ def get_countries(ids=None, date_from=None, date_to=None):
 It's more clear now. But not enough. Snaql provides tiny helper to 
 organize your conditions related to the base query. Let's rewrite our example once again.
 
-```
+```django
 {% sql 'get_countries', note='get countries' %}
     SELECT *
     FROM countries
@@ -292,7 +292,7 @@ organize your conditions related to the base query. Let's rewrite our example on
 
 Nothing changed here. But mark conditions with special ```cond_for``` parameter.
 
-```
+```django
 {% sql 'cond_ids_in_countries', cond_for='get_countries' %}
     {% if ids %}
         id IN ({{ ids|join(', ') }})
@@ -300,7 +300,7 @@ Nothing changed here. But mark conditions with special ```cond_for``` parameter.
 {% endsql %}
 ```
 
-```
+```django
 {% sql 'cond_date_from_countries', cond_for='get_countries' %}
     {% if date_from %}
         creation_date >= {{ date_from|guards.date }}
@@ -308,7 +308,7 @@ Nothing changed here. But mark conditions with special ```cond_for``` parameter.
 {% endsql %}
 ```
 
-```
+```django
 {% sql 'cond_date_to_countries', cond_for='get_countries' %}
     {% if date_to %}
         creation_date <= {{ date_to|guards.date }}
@@ -359,7 +359,7 @@ def get_countries(ids=None, date_from=None, date_to=None):
 There are cases when queries order matters. Like tables creation, for example.
 And Snaql has solution to mark blocks dependencies with ```depends_on``` list.
 
-```
+```django
 {% query 'create_nodes', depends_on=['create_templates', 'create_flavors'] %}
     CREATE TABLE nodes (
         id VARCHAR(50) NOT NULL, 
@@ -374,7 +374,7 @@ And Snaql has solution to mark blocks dependencies with ```depends_on``` list.
 {% endquery %}
 ```
 
-```
+```django
 {% query 'create_templates' %}
     CREATE TABLE templates (
         id VARCHAR(36) NOT NULL, 
@@ -386,7 +386,7 @@ And Snaql has solution to mark blocks dependencies with ```depends_on``` list.
 {% endquery %}
 ```
 
-```
+```django
 {% query 'create_clusters', depends_on=['create_templates', 'create_nodes'] %}
     CREATE TABLE clusters (
         id VARCHAR(50) NOT NULL, 
@@ -397,7 +397,7 @@ And Snaql has solution to mark blocks dependencies with ```depends_on``` list.
 {% endquery %}
 ```
 
-```
+```django
 {% query 'create_flavors' %}
     CREATE TABLE flavors (
         id VARCHAR(36) NOT NULL, 
