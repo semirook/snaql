@@ -37,28 +37,28 @@ Prepare some SQL queries inside ```users.sql``` using block ```sql```
 
 {% raw %}
 ```
-    {% sql 'users_by_country', note='counts users' %}
-        SELECT count(*) AS count
-        FROM user
-        WHERE country_code = ?
-    {% endsql %}
+{% sql 'users_by_country', note='counts users' %}
+    SELECT count(*) AS count
+    FROM user
+    WHERE country_code = ?
+{% endsql %}
 ```
 {% endraw %}
 
 Yes, that's it. Your SQL is inside ```sql``` block and ```note``` is 
 an optional docstring for dynamically created function-generator
-with name 'users_by_country' in this case. You can use ```{% raw %}{% query %}{% endquery %}{% endraw %}```
+with name 'users_by_country' in this case. You can use {% raw %}```{% query %}{% endquery %}```{% endraw %}
 block if your query is too far from SQL. It's just an alias and this block equals to previous.
 
-```django
 {% raw %}
-    {% query 'users_by_country', note='counts users' %}
-        SELECT count(*) AS count
-        FROM user
-        WHERE country_code = ?
-    {% endquery %}
-{% endraw %}
 ```
+{% query 'users_by_country', note='counts users' %}
+    SELECT count(*) AS count
+    FROM user
+    WHERE country_code = ?
+{% endquery %}
+```
+{% endraw %}
 
 What's next?
 
@@ -94,10 +94,10 @@ your_sql = users_queries.users_by_country()
 Cool! No?.. Hm, maybe you need some more flexibility? Remember, query blocks
 are Jinja-powered and you can render them with some context. Example:
 
-```django
+{% raw %}
+```
 # users.sql, you can add as many sql blocks in a single file as you need
 
-{% raw %}
     {% sql 'users_select_cond', note='select users with condition' %}
         SELECT *
         FROM user
@@ -105,8 +105,8 @@ are Jinja-powered and you can render them with some context. Example:
             WHERE user_id IN ({{ users_ids|join(', ') }})
         {% endif %}
     {% endsql %}
-{% endraw %}
 ```
+{% endraw %}
 
 Get it without context:
 
@@ -146,37 +146,37 @@ guards.regexp         | Checks if value matches regular expression
 
 Technically they are custom Jinja filters and can be used as usual.
 
-```django
 {% raw %}
-    {% sql 'select_by_id' %}
-        SELECT *
-        FROM news
-        WHERE id = {{ news_id|guards.integer }}
-    {% endsql %}
-{% endraw %}
 ```
+{% sql 'select_by_id' %}
+    SELECT *
+    FROM news
+    WHERE id = {{ news_id|guards.integer }}
+{% endsql %}
+```
+{% endraw %}
 
-```django
 {% raw %}
-    {% sql 'get_news', note='get news by conditions' %}
-        SELECT *
-        FROM news
-        {% if sort_order %}
-            ORDER BY creation_date {{ sort_order|guards.case(['ASC', 'DESC']) }}
-        {% endif %}
-    {% endsql %}
-{% endraw %}
 ```
+{% sql 'get_news', note='get news by conditions' %}
+    SELECT *
+    FROM news
+    {% if sort_order %}
+        ORDER BY creation_date {{ sort_order|guards.case(['ASC', 'DESC']) }}
+    {% endif %}
+{% endsql %}
+```
+{% endraw %}
 
-```django
 {% raw %}
-    {% sql 'select_by_slug' %}
-        SELECT *
-        FROM news
-        WHERE slug = '{{ slug|guards.regexp("^[A-Za-z][A-Za-z0-9_]{7,15}") }}'
-    {% endsql %}
-{% endraw %}
 ```
+{% sql 'select_by_slug' %}
+    SELECT *
+    FROM news
+    WHERE slug = '{{ slug|guards.regexp("^[A-Za-z][A-Za-z0-9_]{7,15}") }}'
+{% endsql %}
+```
+{% endraw %}
 
 Each guard produces ```SnaqlGuardException``` if something goes wrong.
 
@@ -199,24 +199,24 @@ def get_countries(ids=None, date_from=None, date_to=None):
 
 To describe this logic in Snaql way we need to provide too verbose template.
 
-```django
 {% raw %}
-    {% sql 'get_countries_by_conds', note='get countries by date conditions or ids' %}
-        SELECT *
-        FROM countries
-        {% if ids %}
-            WHERE id IN ({{ ids|join(', ') }})
-        {% endif %}
-        {% if date_from %}
-            {% if ids %} AND {% endif %} creation_date >= {{ date_from }}
-        {% endif %}
-        {% if date_to %}
-            {% if ids or date_from %} AND {% endif %} creation_date <= {{ date_to }}
-        {% endif %}
-        ORDER BY creation_date ASC
-    {% endsql %}
-{% endraw %}
 ```
+{% sql 'get_countries_by_conds', note='get countries by date conditions or ids' %}
+    SELECT *
+    FROM countries
+    {% if ids %}
+        WHERE id IN ({{ ids|join(', ') }})
+    {% endif %}
+    {% if date_from %}
+        {% if ids %} AND {% endif %} creation_date >= {{ date_from }}
+    {% endif %}
+    {% if date_to %}
+        {% if ids or date_from %} AND {% endif %} creation_date <= {{ date_to }}
+    {% endif %}
+    ORDER BY creation_date ASC
+{% endsql %}
+```
+{% endraw %}
 
 ```python
 def get_countries(ids=None, date_from=None, date_to=None):
@@ -237,48 +237,48 @@ It's very error-prone, due to we need to check every variable presence and diffe
 flow combinations. Imagine we have more complicated subquiries building! There is another 
 way to organize SQL blocks here. Separate conditions blocks.
 
-```django
 {% raw %}
-    {% sql 'get_countries', note='get countries' %}
-        SELECT *
-        FROM countries
-        {% if conditions %}
-            WHERE {{ conditions|join(' AND ') }}
-        {% endif %}
-        ORDER BY creation_date ASC
-    {% endsql %}
-{% endraw %}
 ```
+{% sql 'get_countries', note='get countries' %}
+    SELECT *
+    FROM countries
+    {% if conditions %}
+        WHERE {{ conditions|join(' AND ') }}
+    {% endif %}
+    ORDER BY creation_date ASC
+{% endsql %}
+```
+{% endraw %}
 
-```django
 {% raw %}
-    {% sql 'cond_ids_in_countries' %}
-        {% if ids %}
-            id IN ({{ ids|join(', ') }})
-        {% endif %}
-    {% endsql %}
-{% endraw %}
 ```
+{% sql 'cond_ids_in_countries' %}
+    {% if ids %}
+        id IN ({{ ids|join(', ') }})
+    {% endif %}
+{% endsql %}
+```
+{% endraw %}
 
-```django
 {% raw %}
-    {% sql 'cond_date_from_countries' %}
-        {% if date_from %}
-            creation_date >= {{ date_from }}
-        {% endif %}
-    {% endsql %}
-{% endraw %}
 ```
+{% sql 'cond_date_from_countries' %}
+    {% if date_from %}
+        creation_date >= {{ date_from }}
+    {% endif %}
+{% endsql %}
+```
+{% endraw %}
 
-```django
 {% raw %}
-    {% sql 'cond_date_to_countries' %}
-        {% if date_to %}
-            creation_date <= {{ date_to }}
-        {% endif %}
-    {% endsql %}
-{% endraw %}
 ```
+{% sql 'cond_date_to_countries' %}
+    {% if date_to %}
+        creation_date <= {{ date_to }}
+    {% endif %}
+{% endsql %}
+```
+{% endraw %}
 
 ```python
 def get_countries(ids=None, date_from=None, date_to=None):
@@ -301,50 +301,50 @@ def get_countries(ids=None, date_from=None, date_to=None):
 It's more clear now. But not enough. Snaql provides tiny helper to 
 organize your conditions related to the base query. Let's rewrite our example once again.
 
-```django
 {% raw %}
-    {% sql 'get_countries', note='get countries' %}
-        SELECT *
-        FROM countries
-        {% if conditions %}
-            WHERE {{ conditions|join(' AND ') }}
-        {% endif %}
-        ORDER BY creation_date ASC
-    {% endsql %}
-{% endraw %}
 ```
+{% sql 'get_countries', note='get countries' %}
+    SELECT *
+    FROM countries
+    {% if conditions %}
+        WHERE {{ conditions|join(' AND ') }}
+    {% endif %}
+    ORDER BY creation_date ASC
+{% endsql %}
+```
+{% endraw %}
 
 Nothing changed here. But mark conditions with special ```cond_for``` parameter.
 
-```django
 {% raw %}
-    {% sql 'cond_ids_in_countries', cond_for='get_countries' %}
-        {% if ids %}
-            id IN ({{ ids|join(', ') }})
-        {% endif %}
-    {% endsql %}
-{% endraw %}
 ```
+{% sql 'cond_ids_in_countries', cond_for='get_countries' %}
+    {% if ids %}
+        id IN ({{ ids|join(', ') }})
+    {% endif %}
+{% endsql %}
+```
+{% endraw %}
 
-```django
 {% raw %}
-    {% sql 'cond_date_from_countries', cond_for='get_countries' %}
-        {% if date_from %}
-            creation_date >= {{ date_from|guards.date }}
-        {% endif %}
-    {% endsql %}
-{% endraw %}
 ```
+{% sql 'cond_date_from_countries', cond_for='get_countries' %}
+    {% if date_from %}
+        creation_date >= {{ date_from|guards.date }}
+    {% endif %}
+{% endsql %}
+```
+{% endraw %}
 
-```django
 {% raw %}
-    {% sql 'cond_date_to_countries', cond_for='get_countries' %}
-        {% if date_to %}
-            creation_date <= {{ date_to|guards.date }}
-        {% endif %}
-    {% endsql %}
-{% endraw %}
 ```
+{% sql 'cond_date_to_countries', cond_for='get_countries' %}
+    {% if date_to %}
+        creation_date <= {{ date_to|guards.date }}
+    {% endif %}
+{% endsql %}
+```
+{% endraw %}
 
 All ```cond_for``` blocks are related to ```get_countries``` query only.
 Snaql checks that and doesn't allow you to use foreign conditions.
@@ -389,61 +389,61 @@ def get_countries(ids=None, date_from=None, date_to=None):
 There are cases when queries order matters. Like tables creation, for example.
 And Snaql has solution to mark blocks dependencies with ```depends_on``` list.
 
-```django
 {% raw %}
-    {% query 'create_nodes', depends_on=['create_templates', 'create_flavors'] %}
-        CREATE TABLE nodes (
-            id VARCHAR(50) NOT NULL, 
-            type VARCHAR(6), 
-            properties VARCHAR(1024), 
-            template_id VARCHAR(36), 
-            flavor_id VARCHAR(36), 
-            PRIMARY KEY (id), 
-            FOREIGN KEY(template_id) REFERENCES templates (id), 
-            FOREIGN KEY(flavor_id) REFERENCES flavors (id)
-        )
-    {% endquery %}
-{% endraw %}
 ```
+{% query 'create_nodes', depends_on=['create_templates', 'create_flavors'] %}
+    CREATE TABLE nodes (
+        id VARCHAR(50) NOT NULL, 
+        type VARCHAR(6), 
+        properties VARCHAR(1024), 
+        template_id VARCHAR(36), 
+        flavor_id VARCHAR(36), 
+        PRIMARY KEY (id), 
+        FOREIGN KEY(template_id) REFERENCES templates (id), 
+        FOREIGN KEY(flavor_id) REFERENCES flavors (id)
+    )
+{% endquery %}
+```
+{% endraw %}
 
-```django
 {% raw %}
-    {% query 'create_templates' %}
-        CREATE TABLE templates (
-            id VARCHAR(36) NOT NULL, 
-            type VARCHAR(20), 
-            name VARCHAR(50), 
-            properties VARCHAR(1024), 
-            PRIMARY KEY (id)
-        )
-    {% endquery %}
-{% endraw %}
 ```
+{% query 'create_templates' %}
+    CREATE TABLE templates (
+        id VARCHAR(36) NOT NULL, 
+        type VARCHAR(20), 
+        name VARCHAR(50), 
+        properties VARCHAR(1024), 
+        PRIMARY KEY (id)
+    )
+{% endquery %}
+```
+{% endraw %}
 
-```django
 {% raw %}
-    {% query 'create_clusters', depends_on=['create_templates', 'create_nodes'] %}
-        CREATE TABLE clusters (
-            id VARCHAR(50) NOT NULL, 
-            name VARCHAR(50), 
-            template_id VARCHAR(36), 
-            FOREIGN KEY(template_id) REFERENCES templates (id)
-        )
-    {% endquery %}
-{% endraw %}
 ```
+{% query 'create_clusters', depends_on=['create_templates', 'create_nodes'] %}
+    CREATE TABLE clusters (
+        id VARCHAR(50) NOT NULL, 
+        name VARCHAR(50), 
+        template_id VARCHAR(36), 
+        FOREIGN KEY(template_id) REFERENCES templates (id)
+    )
+{% endquery %}
+```
+{% endraw %}
 
-```django
 {% raw %}
-    {% query 'create_flavors' %}
-        CREATE TABLE flavors (
-            id VARCHAR(36) NOT NULL, 
-            properties VARCHAR(1024), 
-            PRIMARY KEY (id)
-        )
-    {% endquery %}
-{% endraw %}
 ```
+{% query 'create_flavors' %}
+    CREATE TABLE flavors (
+        id VARCHAR(36) NOT NULL, 
+        properties VARCHAR(1024), 
+        PRIMARY KEY (id)
+    )
+{% endquery %}
+```
+{% endraw %}
 
 Correct execution order can be fetched with special ```ordered_blocks``` attribute.
 
