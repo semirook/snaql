@@ -35,12 +35,12 @@ Create some folder and related namespace-files with your future queries. Like th
 Prepare some SQL queries inside ```users.sql``` using block ```sql``` 
 (Snaql is based on Jinja2 template engine and you can use it features):
 
-```
-{% sql 'users_by_country', note='counts users' %}
+```django
+{ % sql 'users_by_country', note='counts users' % }
     SELECT count(*) AS count
     FROM user
     WHERE country_code = ?
-{% endsql %}
+{ % endsql % }
 ```
 
 Yes, that's it. Your SQL is inside ```sql``` block and ```note``` is 
