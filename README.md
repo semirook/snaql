@@ -35,15 +35,13 @@ Create some folder and related namespace-files with your future queries. Like th
 Prepare some SQL queries inside ```users.sql``` using block ```sql``` 
 (Snaql is based on Jinja2 template engine and you can use it features):
 
-```django
 {% raw %}
-    {% sql 'users_by_country', note='counts users' %}
-        SELECT count(*) AS count
-        FROM user
-        WHERE country_code = ?
-    {% endsql %}
+{% sql 'users_by_country', note='counts users' %}
+    SELECT count(*) AS count
+    FROM user
+    WHERE country_code = ?
+{% endsql %}
 {% endraw %}
-```
 
 Yes, that's it. Your SQL is inside ```sql``` block and ```note``` is 
 an optional docstring for dynamically created function-generator
@@ -132,16 +130,16 @@ your_sql = users_queries.users_select_cond(**sql_context)
 
 Provides simple template variables guards to check or convert values to specific type.
 
-**Guard name**        | **Description**                                                  |
-----------------------|------------------------------------------------------------------|
-guards.string         | Escapes string variable and surrounds it with quotes             |
-guards.integer        | If value is string, tries to convert it to int()                 |
-guards.float          | If value is string, tries to convert it to float()               |
-guards.datetime       | Converts datetime object to formatted string YYYY-MM-DD HH:MI:SS |
-guards.date           | Converts date object to formatted string YYYY-MM-DD              |
-guards.time           | Converts time object to formatted string HH:MI:SS                |
-guards.case           | Checks if value is in the case list                              |
-guards.regexp         | Checks if value matches regular expression                       |
+**Guard name**        | **Description**                                                  
+----------------------|------------------------------------------------------------------
+guards.string         | Escapes string variable and surrounds it with quotes             
+guards.integer        | If value is string, tries to convert it to int()                 
+guards.float          | If value is string, tries to convert it to float()               
+guards.datetime       | Converts datetime object to formatted string YYYY-MM-DD HH:MI:SS 
+guards.date           | Converts date object to formatted string YYYY-MM-DD              
+guards.time           | Converts time object to formatted string HH:MI:SS                
+guards.case           | Checks if value is in the case list                              
+guards.regexp         | Checks if value matches regular expression                       
 
 
 Technically they are custom Jinja filters and can be used as usual.
