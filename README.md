@@ -35,6 +35,7 @@ Create some folder and related namespace-files with your future queries. Like th
 Prepare some SQL queries inside ```users.sql``` using block ```sql``` 
 (Snaql is based on Jinja2 template engine and you can use it features):
 
+```
 {% raw %}
 {% sql 'users_by_country', note='counts users' %}
     SELECT count(*) AS count
@@ -42,6 +43,7 @@ Prepare some SQL queries inside ```users.sql``` using block ```sql```
     WHERE country_code = ?
 {% endsql %}
 {% endraw %}
+```
 
 Yes, that's it. Your SQL is inside ```sql``` block and ```note``` is 
 an optional docstring for dynamically created function-generator
