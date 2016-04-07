@@ -47,7 +47,7 @@ Prepare some SQL queries inside ```users.sql``` using block ```sql```
 
 Yes, that's it. Your SQL is inside ```sql``` block and ```note``` is 
 an optional docstring for dynamically created function-generator
-with name 'users_by_country' in this case. You can use ```{% query %}{% endquery %}```
+with name 'users_by_country' in this case. You can use ```{% raw %}{% query %}{% endquery %}{% endraw %}```
 block if your query is too far from SQL. It's just an alias and this block equals to previous.
 
 ```django
