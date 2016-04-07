@@ -36,11 +36,13 @@ Prepare some SQL queries inside ```users.sql``` using block ```sql```
 (Snaql is based on Jinja2 template engine and you can use it features):
 
 ```django
-{% sql 'users_by_country', note='counts users' %}
-    SELECT count(*) AS count
-    FROM user
-    WHERE country_code = ?
-{% endsql %}
+{% raw %}
+    {% sql 'users_by_country', note='counts users' %}
+        SELECT count(*) AS count
+        FROM user
+        WHERE country_code = ?
+    {% endsql %}
+{% endraw %}
 ```
 
 Yes, that's it. Your SQL is inside ```sql``` block and ```note``` is 
@@ -49,11 +51,13 @@ with name 'users_by_country' in this case. You can use ```{% query %}{% endquery
 block if your query is too far from SQL. It's just an alias and this block equals to previous.
 
 ```django
-{% query 'users_by_country', note='counts users' %}
-    SELECT count(*) AS count
-    FROM user
-    WHERE country_code = ?
-{% endquery %}
+{% raw %}
+    {% query 'users_by_country', note='counts users' %}
+        SELECT count(*) AS count
+        FROM user
+        WHERE country_code = ?
+    {% endquery %}
+{% endraw %}
 ```
 
 What's next?
