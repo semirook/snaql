@@ -144,7 +144,7 @@ Technically they are custom Jinja filters and can be used as usual.
 { % sql 'select_by_id' % }
     SELECT *
     FROM news
-    WHERE id = {{ news_id|guards.integer }}
+    WHERE id = {{ news_id | guards.integer }}
 { % endsql % }
 ```
 
@@ -153,7 +153,7 @@ Technically they are custom Jinja filters and can be used as usual.
     SELECT *
     FROM news
     {% if sort_order %}
-        ORDER BY creation_date {{ sort_order|guards.case(['ASC', 'DESC']) }}
+        ORDER BY creation_date {{ sort_order | guards.case(['ASC', 'DESC']) }}
     {% endif %}
 { % endsql % }
 ```
@@ -162,7 +162,7 @@ Technically they are custom Jinja filters and can be used as usual.
 { % sql 'select_by_slug' % }
     SELECT *
     FROM news
-    WHERE slug = '{{ slug|guards.regexp("^[A-Za-z][A-Za-z0-9_]{7,15}") }}'
+    WHERE slug = '{{ slug | guards.regexp("^[A-Za-z][A-Za-z0-9_]{7,15}") }}'
 { % endsql % }
 ```
 
@@ -303,7 +303,7 @@ Nothing changed here. But mark conditions with special ```cond_for``` parameter.
 ```
 { % sql 'cond_date_from_countries', cond_for='get_countries' % }
     {% if date_from %}
-        creation_date >= {{ date_from|guards.date }}
+        creation_date >= {{ date_from | guards.date }}
     {% endif %}
 { % endsql % }
 ```
@@ -311,7 +311,7 @@ Nothing changed here. But mark conditions with special ```cond_for``` parameter.
 ```
 { % sql 'cond_date_to_countries', cond_for='get_countries' % }
     {% if date_to %}
-        creation_date <= {{ date_to|guards.date }}
+        creation_date <= {{ date_to | guards.date }}
     {% endif %}
 { % endsql % }
 ```
