@@ -13,6 +13,7 @@ from jinja2 import Environment, TemplateNotFound, FileSystemLoader
 from jinja2.ext import Extension
 from jinja2.loaders import split_template_path
 from jinja2.utils import open_if_exists
+from jinja2._compat import string_types
 
 from snaql.convertors import (
     guard_string,
@@ -147,12 +148,13 @@ class SnaqlException(Exception):
 
 class Snaql(object):
 
-    def __init__(self, sql_root, sql_ns):
-        self.sql_root = sql_root
-        self.jinja_env = Environment(
+    def __init__(self, paths, env=None):
+        if isinstance(paths, string_types):
+            paths = [paths]
+        self.jinja_env = env or Environment(
             trim_blocks=True,
             extensions=[JinjaSQLExtension],
-            loader=RawFileSystemLoader(os.path.join(self.sql_root, sql_ns)),
+            loader=RawFileSystemLoader(paths),
         )
         self.jinja_env.filters.update({
             'guards.string': guard_string,

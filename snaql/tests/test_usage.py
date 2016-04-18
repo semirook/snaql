@@ -11,8 +11,11 @@ except ImportError:
 class TestUseCases(unittest.TestCase):
 
     def setUp(self):
-        self.sql_root = os.path.abspath(os.path.dirname(__file__))
-        self.snaql = Snaql(self.sql_root, 'queries')
+        self.path = os.path.join(
+            os.path.abspath(os.path.dirname(__file__)),
+            'queries'
+        )
+        self.snaql = Snaql(self.path)
 
     def test_usual_case(self):
         users_queries = self.snaql.load_queries('users.sql')

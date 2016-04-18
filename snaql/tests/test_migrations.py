@@ -10,8 +10,11 @@ except ImportError:
 class TestMigrations(unittest.TestCase):
 
     def setUp(self):
-        self.sql_root = os.path.abspath(os.path.dirname(__file__))
-        self.snaql = Snaql(self.sql_root, 'queries')
+        self.path = os.path.join(
+            os.path.abspath(os.path.dirname(__file__)),
+            'queries'
+        )
+        self.snaql = Snaql(self.path)
 
     def test_guard_integer_exc(self):
         migrate_queries = self.snaql.load_queries('migrations.sql')
