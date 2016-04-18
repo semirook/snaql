@@ -12,8 +12,11 @@ except ImportError:
 class TestGuards(unittest.TestCase):
 
     def setUp(self):
-        self.sql_root = os.path.abspath(os.path.dirname(__file__))
-        self.snaql = Snaql(self.sql_root, 'queries')
+        self.path = os.path.join(
+            os.path.abspath(os.path.dirname(__file__)),
+            'queries'
+        )
+        self.snaql = Snaql(self.path)
 
     def test_guards_normal(self):
         news_queries = self.snaql.load_queries('news.sql')

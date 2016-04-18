@@ -13,7 +13,7 @@ class TestIntegration(unittest.TestCase):
 
     def setUp(self):
         self.sql_root = os.path.abspath(os.path.dirname(__file__))
-        self.snaql = Snaql(self.sql_root, 'queries')
+        self.snaql = Snaql(os.path.join(self.sql_root, 'queries'))
         self.sqlite_folder = os.path.join(self.sql_root, 'data')
         self.sqlite_path = os.path.join(self.sqlite_folder, 'test_db.sqlite')
         if not os.path.exists(self.sqlite_folder):
