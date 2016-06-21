@@ -8,6 +8,7 @@ python:
 script: nosetests
 install:
   - "pip install jinja2"
+  - "pip install schema"
 notifications:
   email:
     - semirook@gmail.com
