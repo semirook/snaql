@@ -1,12 +1,11 @@
 {% sql 'users_by_country', note='counts users' %}
     SELECT count(*) AS count
     FROM user
-    WHERE country_code = ?
+    WHERE country_code = 'UA'
 {% endsql %}
 
 {% sql 'select_all' %}
-    SELECT *
-    FROM user
+    SELECT * FROM user
 {% endsql %}
 
 {% sql 'users_count_cond', note='counts users by country' %}

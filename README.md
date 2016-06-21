@@ -30,4 +30,4 @@ You always can find the most recent docs with examples on [Snaql GitBook](https:
 
 Simple, without DB clients dependencies (use what you need). Try!
 
-Tested in Python 2.6, 2.7, 3.3, 3.4, 3.5
+Tested in Python 2.7, 3.3, 3.4, 3.5

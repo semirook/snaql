@@ -167,7 +167,7 @@ Nothing changed here. But mark conditions with special ```cond_for``` parameter.
 All ```cond_for``` blocks are related to ```get_countries``` query only.
 Snaql checks that and doesn't allow you to use foreign conditions.
 Also, you can't render condition block individually, it has no sense. Both 
-situations will raise ```SnaqlException```. Now, you code may look like this:
+situations will raise ```SnaqlException```. Now, your code may look like this:
 
 ```python
 def get_countries(ids=None, date_from=None, date_to=None):

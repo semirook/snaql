@@ -66,7 +66,7 @@ migrate_queries = snaql_factory.load_queries('migrations.sql')
 solution = migrate_queries.ordered_blocks
 
 # It is a list of ordered functions like
-solution = [
+solution == [
     create_flavors_fn
     create_templates_fn,
     create_nodes_fn,

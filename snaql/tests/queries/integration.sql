@@ -9,18 +9,18 @@
 {% endquery %}
 
 {% query 'drop_artists' %}
-    DROP TABLE artists;
+    DROP TABLE artists
 {% endquery %}
 
 {% query 'insert_artist' %}
     INSERT INTO artists
-    VALUES ({{ id|guards.integer }}, {{ name|guards.string }}, {{ age|guards.integer }}, {{ instrument|guards.string }});
+    VALUES ({{ id|guards.integer }}, {{ name|guards.string }}, {{ age|guards.integer }}, {{ instrument|guards.string }})
 {% endquery %}
 
 {% sql 'get_artists', note='get artists' %}
     SELECT name, age, instrument
     FROM artists
-    WHERE id = {{ id }};
+    WHERE id = {{ id }}
 {% endsql %}
 
 {% sql 'simple_tmpl' %}

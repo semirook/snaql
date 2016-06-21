@@ -20,9 +20,13 @@ def escape_string(value):
 
 def guard_string(value):
     if not value:
-        return value
+        return "''"
 
     return "'%s'" % escape_string(value)
+
+
+def guard_bool(value):
+    return 1 if value else 0
 
 
 def guard_integer(value):

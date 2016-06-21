@@ -12,6 +12,7 @@ guards.date           | Converts date object to formatted string YYYY-MM-DD
 guards.time           | Converts time object to formatted string HH:MI:SS                
 guards.case           | Checks if value is in the case list                              
 guards.regexp         | Checks if value matches regular expression                       
+guards.bool           | Bool check, returns 1 or 0
 
 
 Technically they are custom Jinja filters and can be used as usual.

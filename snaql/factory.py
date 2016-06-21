@@ -13,17 +13,19 @@ from jinja2 import Environment, TemplateNotFound, FileSystemLoader
 from jinja2.ext import Extension
 from jinja2.loaders import split_template_path
 from jinja2.utils import open_if_exists
+from schema import Schema
 
 from snaql.convertors import (
-    guard_string,
-    guard_integer,
+    guard_bool,
+    guard_case,
     guard_date,
     guard_datetime,
     guard_float,
-    guard_timedelta,
-    guard_time,
-    guard_case,
+    guard_integer,
     guard_regexp,
+    guard_string,
+    guard_time,
+    guard_timedelta,
 )
 
 
@@ -164,6 +166,7 @@ class Snaql(object):
             'guards.time': guard_time,
             'guards.case': guard_case,
             'guards.regexp': guard_regexp,
+            'guards.bool': guard_bool,
         })
         self.jinja_env.extend(sql_params={})
 
@@ -190,6 +193,7 @@ class Snaql(object):
                     '"%s" is condition for "%s" and can not '
                     'be rendered outside of it\'s scope'
                 ) % (name, meta_struct['funcs'][name]['cond_for']))
+
             if kwargs:
                 for point, val in kwargs.items():
                     maybe_cond_sql = subrender_cond(name, val, kwargs)
@@ -203,6 +207,10 @@ class Snaql(object):
                     ):
                         val = [subrender_cond(name, v, kwargs) for v in val]
                         kwargs[point] = [v for v in val if v]
+
+                if 'schema' in kwargs and isinstance(kwargs['schema'], Schema):
+                    validation_schema = kwargs.pop('schema')
+                    kwargs = validation_schema.validate(kwargs)
 
                 sql_tmpl = env.from_string(meta_struct['funcs'][name]['raw_sql'])
                 return sql_tmpl.render(**kwargs).strip()

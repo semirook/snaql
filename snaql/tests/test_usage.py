@@ -20,7 +20,7 @@ class TestUseCases(unittest.TestCase):
             users_queries.users_by_country(), (
                 "SELECT count(*) AS count "
                 "FROM user "
-                "WHERE country_code = ?"
+                "WHERE country_code = 'UA'"
             )
         )
         self.assertEqual(

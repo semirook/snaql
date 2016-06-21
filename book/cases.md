@@ -1,6 +1,6 @@
 ## Examples
 
-Create some folder and related namespace-files with your future queries. Like this, for example:
+Create some folder and related namespace files with your future queries. Like this, for example:
 
 ```
 /queries
