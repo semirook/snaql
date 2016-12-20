@@ -34,7 +34,7 @@ def guard_integer(value):
         return value
     try:
         return int(value)
-    except ValueError as e:
+    except (TypeError, ValueError) as e:
         raise SnaqlGuardException(e.args[0])
 
 
@@ -77,7 +77,7 @@ def guard_float(value):
     try:
         value = float(value)
         return "%.15g" % value
-    except ValueError as e:
+    except (TypeError, ValueError) as e:
         raise SnaqlGuardException(e.args[0])
 
 
