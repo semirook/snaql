@@ -95,7 +95,7 @@ def guard_timedelta(obj):
             fmt = "'{0:02d}:{1:02d}:{2:02d}'"
 
         return fmt.format(hours, minutes, seconds, obj.microseconds)
-    except (AttributeError, ValueError):
+    except (AttributeError, ValueError) as e:
         raise SnaqlGuardException(e.args[0])
 
 
@@ -110,7 +110,7 @@ def guard_time(obj):
             fmt = "'{0.hour:02}:{0.minute:02}:{0.second:02}'"
 
         return fmt.format(obj)
-    except (AttributeError, ValueError):
+    except (AttributeError, ValueError) as e:
         raise SnaqlGuardException(e.args[0])
 
 

@@ -2,7 +2,7 @@
 import os
 import shutil
 import sqlite3
-from snaql.factory import Snaql, SnaqlException
+from snaql.factory import Snaql
 try:
     import unittest2 as unittest
 except ImportError:

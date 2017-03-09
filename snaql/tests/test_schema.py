@@ -1,7 +1,7 @@
 # coding: utf-8
 import os
 import datetime
-from schema import Schema, And, Use, Optional, SchemaError
+from schema import Schema, And, Use, SchemaError
 from snaql.factory import Snaql
 from snaql.convertors import guard_date, escape_string
 try:
@@ -33,7 +33,6 @@ class TestSchemaCases(unittest.TestCase):
 
     def test_usual_string_case(self):
         news_queries = self.snaql.load_queries('unsafe_news.sql')
-        now = datetime.datetime.utcnow()
         schema = Schema({
             'slug': And(Use(escape_string), Use(lambda s: "`%s_slug`" % s)),
         })
@@ -41,7 +40,9 @@ class TestSchemaCases(unittest.TestCase):
             'slug': 'cool',
         }
         result = news_queries.select_by_slug(schema=schema, **context)
-        self.assertEqual(result, 'SELECT * FROM news WHERE slug = `cool_slug`')
+        self.assertEqual(
+            result, 'SELECT *\n FROM news\n WHERE slug = `cool_slug`'
+        )
 
     def test_wrong_case(self):
         news_queries = self.snaql.load_queries('unsafe_news.sql')

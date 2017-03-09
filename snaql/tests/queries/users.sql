@@ -8,26 +8,31 @@
     SELECT * FROM user
 {% endsql %}
 
+{% sql 'select_all_with_comment' %}
+    -- select all users with all fields, really
+    SELECT * FROM user
+{% endsql %}
+
 {% sql 'users_count_cond', note='counts users by country' %}
     SELECT count(*) AS count
     FROM user
-    {% if by_country %}
+    {% if by_country -%}
         WHERE country_code = {{ country_code }}
-    {% endif %}
+    {%- endif %}
 {% endsql %}
 
 {% sql 'users_select_cond', note='select users with condition' %}
     SELECT *
     FROM user
-    {% if users_ids %}
+    {% if users_ids -%}
         WHERE user_id IN ({{ users_ids|join(', ') }})
-    {% endif %}
+    {%- endif %}
 {% endsql %}
 
 {% sql 'users_escaping', note='try to escape' %}
     SELECT *
     FROM user
-    {% if user_name %}
+    {% if user_name -%}
         WHERE user_name = {{ user_name|guards.string }}
-    {% endif %}
+    {%- endif %}
 {% endsql %}

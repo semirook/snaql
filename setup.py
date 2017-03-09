@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='snaql',
-    version='0.4',
+    version='0.4.1',
     author='Roman Semirook',
     author_email='semirook@gmail.com',
     packages=find_packages(),
@@ -12,8 +12,8 @@ setup(
     description='Transparant *QL usage without ORM',
     long_description='Transparant *QL usage without ORM',
     install_requires=[
-        'Jinja2==2.8',
-        'schema==0.4.0',
+        'Jinja2==2.9.5',
+        'schema==0.6.5',
     ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',

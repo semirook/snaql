@@ -18,8 +18,8 @@ class TestUseCases(unittest.TestCase):
         users_queries = self.snaql.load_queries('users.sql')
         self.assertEqual(
             users_queries.users_by_country(), (
-                "SELECT count(*) AS count "
-                "FROM user "
+                "SELECT count(*) AS count\n "
+                "FROM user\n "
                 "WHERE country_code = 'UA'"
             )
         )
@@ -35,15 +35,15 @@ class TestUseCases(unittest.TestCase):
 
         self.assertEqual(
             users_queries.users_count_cond(), (
-                "SELECT count(*) AS count "
-                "FROM user"
+                "SELECT count(*) AS count\n "
+                "FROM user\n "
             )
         )
         context = {'by_country': True, 'country_code': 42}
         self.assertEqual(
             users_queries.users_count_cond(**context), (
-                "SELECT count(*) AS count "
-                "FROM user  "
+                "SELECT count(*) AS count\n "
+                "FROM user\n "
                 "WHERE country_code = 42"
             )
         )
@@ -54,8 +54,8 @@ class TestUseCases(unittest.TestCase):
         context = {'users_ids': [1, 2, 3]}
         self.assertEqual(
             users_queries.users_select_cond(**context), (
-                "SELECT * "
-                "FROM user  "
+                "SELECT *\n "
+                "FROM user\n "
                 "WHERE user_id IN (1, 2, 3)"
             )
         )
@@ -65,8 +65,8 @@ class TestUseCases(unittest.TestCase):
 
         context = {'user_name': "semirook"}
         self.assertEqual(
-                users_queries.users_escaping(**context), (
-                "SELECT * FROM user  "
+            users_queries.users_escaping(**context), (
+                "SELECT *\n FROM user\n "
                 "WHERE user_name = 'semirook'"
             )
         )
@@ -92,7 +92,7 @@ class TestUseCases(unittest.TestCase):
         )
         self.assertEqual(
             news_queries.select_all(), (
-                "SELECT * "
+                "SELECT *\n "
                 "FROM news"
             )
         )
@@ -114,3 +114,7 @@ class TestUseCases(unittest.TestCase):
         self.assertTrue(
             result_dict in ("{'a': 1, 'b': 2}", "{'b': 2, 'a': 1}")
         )
+
+    def test_tmpl_with_comment(self):
+        users_queries = self.snaql.load_queries('users.sql')
+        abc = users_queries.select_all_with_comment()

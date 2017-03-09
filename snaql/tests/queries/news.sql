@@ -14,12 +14,12 @@
 {% sql 'get_news', note='get news by conditions' %}
     SELECT *
     FROM news
-    {% if conditions %}
+    {% if conditions -%}
         WHERE {{ conditions|join(' AND ') }}
-    {% endif %}
-    {% if sort_order %}
+    {%- endif %}
+    {% if sort_order -%}
         ORDER BY creation_date {{ sort_order|guards.case(['ASC', 'DESC']) }}
-    {% endif %}
+    {%- endif %}
 {% endsql %}
 
 {% sql 'cond_ids_in_news', cond_for='get_news' %}

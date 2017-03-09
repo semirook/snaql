@@ -24,11 +24,11 @@ class TestGuards(unittest.TestCase):
                 date_from=date,
                 rating='5.6',
             ), (
-                "SELECT * FROM news "
-                "WHERE id = 10 "
+                "SELECT *\n FROM news\n "
+                "WHERE id = 10\n "
                 "AND creation_date >= "
                 "'{0.year:04}-{0.month:02}-{0.day:02} "
-                "{0.hour:02}:{0.minute:02}:{0.second:02}.{0.microsecond:06}' "
+                "{0.hour:02}:{0.minute:02}:{0.second:02}.{0.microsecond:06}'\n "
                 "AND rating >= 5.6"
             ).format(date)
         )
@@ -49,14 +49,6 @@ class TestGuards(unittest.TestCase):
             date_from='tomorrow'
         )
 
-    def test_guard_datetime_exc(self):
-        news_queries = self.snaql.load_queries('news.sql')
-        self.assertRaises(
-            SnaqlGuardException,
-            news_queries.select_by_id,
-            date_from='mouse'
-        )
-
     def test_guard_case_exc(self):
         news_queries = self.snaql.load_queries('news.sql')
         self.assertRaises(
@@ -69,14 +61,14 @@ class TestGuards(unittest.TestCase):
         news_queries = self.snaql.load_queries('news.sql')
         self.assertEqual(
             news_queries.get_news(sort_order='ASC'),
-            'SELECT * FROM news   ORDER BY creation_date ASC'
+            'SELECT *\n FROM news\n  ORDER BY creation_date ASC'
         )
 
     def test_guard_regexp(self):
         news_queries = self.snaql.load_queries('news.sql')
         self.assertEqual(
             news_queries.select_by_slug(slug='latest_news'),
-            "SELECT * FROM news WHERE slug = 'latest_news'"
+            "SELECT *\n FROM news\n WHERE slug = 'latest_news'"
         )
 
     def test_guard_exc(self):
@@ -94,7 +86,7 @@ class TestGuards(unittest.TestCase):
             news_queries.cond_date_from_news,
             news_queries.cond_date_to_news,
         ])
-        self.assertEqual(response, 'SELECT * FROM news')
+        self.assertEqual(response, 'SELECT *\n FROM news')
 
     def test_conditions_sugar_with_context(self):
         news_queries = self.snaql.load_queries('news.sql')
@@ -111,9 +103,9 @@ class TestGuards(unittest.TestCase):
         ], **context)
         self.assertEqual(
             response, (
-                "SELECT * FROM news  WHERE id IN (1, 2, 3) "
+                "SELECT *\n FROM news\n WHERE id IN (1, 2, 3) "
                 "AND creation_date >= "
-                "'{0.year:04}-{0.month:02}-{0.day:02}'   "
+                "'{0.year:04}-{0.month:02}-{0.day:02}' "
                 "ORDER BY creation_date ASC"
             ).format(today)
         )

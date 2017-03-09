@@ -1,9 +1,7 @@
 # coding: utf-8
 import os
-import re
 import copy
 import collections
-import itertools
 import types
 import sys
 from collections import namedtuple
@@ -74,9 +72,10 @@ class JinjaSQLExtension(Extension):
         if parser.stream.skip_if('comma'):
             # Optional 'note' for function docstring
             if (
-                parser.stream.current.type == 'name'
-                and parser.stream.current.value
-                in ('note', 'cond_for', 'depends_on')
+                parser.stream.current.type == 'name' and
+                parser.stream.current.value in (
+                    'note', 'cond_for', 'depends_on'
+                )
             ):
                 stream_type = parser.stream.current.value
                 next(parser.stream)
@@ -97,7 +96,7 @@ class JinjaSQLExtension(Extension):
         # Lines range of original raw template
         raw_lines = slice(lineno, parser.stream.current.lineno-1)
         self.environment.sql_params.setdefault('funcs', {}).update({
-            expr.value: {'raw_sql': ' '.join(raw_template[raw_lines])}
+            expr.value: {'raw_sql': '\n '.join(raw_template[raw_lines])}
         })
         call_node = nodes.Call(
             self.attr('_sql_process', lineno=lineno),
@@ -107,9 +106,11 @@ class JinjaSQLExtension(Extension):
 
     def _sql_process(self, *args, **kwargs):
         caller = kwargs['caller']
-        raw_sql = ' '.join(caller().split())
+        raw_sql = '\n '.join(x.strip() for x in caller().split('\n') if x)
         if 'cond_for' in kwargs:
-            origin = self.environment.sql_params['funcs'].get(kwargs['cond_for'])
+            origin = (
+                self.environment.sql_params['funcs'].get(kwargs['cond_for'])
+            )
             if origin:
                 origin.setdefault('conds', []).append(kwargs['cond_for'])
 
@@ -173,8 +174,12 @@ class Snaql(object):
     def gen_func(self, name, meta_struct, env):
 
         def subrender_cond(owner_name, cond_func, context):
-            if isinstance(cond_func, collections.Callable) and cond_func.is_cond:
-                if meta_struct['funcs'][cond_func.func_name]['cond_for'] != owner_name:
+            if (
+                isinstance(cond_func, collections.Callable) and
+                cond_func.is_cond
+            ):
+                cond_struct = meta_struct['funcs'][cond_func.func_name]
+                if cond_struct['cond_for'] != owner_name:
                     raise SnaqlException(
                         '"%s" is not proper condition for "%s"' % (
                             cond_func.func_name,
@@ -200,8 +205,8 @@ class Snaql(object):
                     if maybe_cond_sql:
                         kwargs[point] = maybe_cond_sql
                     if (
-                        isinstance(val, collections.Iterable)
-                        and not isinstance(
+                        isinstance(val, collections.Iterable) and
+                        not isinstance(
                             val, (str if PY3K else types.StringTypes, dict)
                         )
                     ):
@@ -212,14 +217,16 @@ class Snaql(object):
                     validation_schema = kwargs.pop('schema')
                     kwargs = validation_schema.validate(kwargs)
 
-                sql_tmpl = env.from_string(meta_struct['funcs'][name]['raw_sql'])
+                sql_tmpl = (
+                    env.from_string(meta_struct['funcs'][name]['raw_sql'])
+                )
                 return sql_tmpl.render(**kwargs).strip()
 
             return meta_struct['funcs'][name]['sql']
 
         fn.__doc__ = meta_struct['funcs'][name]['note']
         fn.is_cond = meta_struct['funcs'][name]['is_cond']
-        fn.func_name = name
+        fn.func_name = str(name)
 
         return fn
 
