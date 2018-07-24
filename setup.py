@@ -12,8 +12,8 @@ setup(
     description='Transparant *QL usage without ORM',
     long_description='Transparant *QL usage without ORM',
     install_requires=[
-        'Jinja2==2.9.5',
-        'schema==0.6.5',
+        'Jinja2>=2.9.5',
+        'schema>=0.6.5',
     ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
