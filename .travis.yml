@@ -1,14 +1,12 @@
 language: python
+dist: xenial
 python:
   - "2.7"
-  - "3.3"
-  - "3.4"
   - "3.5"
   - "3.6"
-script: nosetests
-install:
-  - "pip install jinja2"
-  - "pip install schema"
+  - "3.7"
+script: nosetests -v
+install: python setup.py install
 notifications:
   email:
     - semirook@gmail.com
