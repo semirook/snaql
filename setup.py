@@ -3,8 +3,8 @@ from setuptools import setup, find_packages
 
 setup(
     name='snaql',
-    version='0.4.1',
-    author='Roman Semirook',
+    version='0.4.2',
+    author='Roman Zaiev',
     author_email='semirook@gmail.com',
     packages=find_packages(),
     license='MIT',
