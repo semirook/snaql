@@ -13,7 +13,7 @@ VERSION = '0.4.2'
 try:
     with open(os.path.join(HERE_PATH, 'README.md'), encoding='utf-8') as f:
         long_description = '\n' + f.read()
-except FileNotFoundError:
+except IOError:
     long_description = DESCRIPTION
 
 
