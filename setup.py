@@ -1,6 +1,5 @@
 # coding: utf-8
 import os
-import pathlib
 import sys
 from shutil import rmtree
 from setuptools import setup, find_packages, Command
