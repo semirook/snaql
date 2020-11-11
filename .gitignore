@@ -137,3 +137,5 @@ Temporary Items
 # Any other editors/IDEs
 *.sublime-project
 .vscode
+
+*GKN*
