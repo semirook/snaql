@@ -26,7 +26,7 @@ from snaql.convertors import (
     guard_timedelta,
 )
 
-import snaql.engine as enginge
+import snaql.engine as engine
 
 
 PY = sys.version_info
@@ -152,7 +152,7 @@ class SnaqlException(Exception):
 
 class Snaql(object):
 
-    def __init__(self, sql_root, sql_ns, engine=enginge.default):
+    def __init__(self, sql_root, sql_ns, engine=engine.default):
         self.sql_root = sql_root
         self.jinja_env = Environment(
             trim_blocks=True,
@@ -172,6 +172,7 @@ class Snaql(object):
             'guards.bool': guard_bool,
         })
         self.jinja_env.extend(sql_params={})
+        self._engine = engine
 
     def gen_func(self, name, meta_struct, env):
 
