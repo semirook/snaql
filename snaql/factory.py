@@ -26,6 +26,8 @@ from snaql.convertors import (
     guard_timedelta,
 )
 
+import snaql.engine as enginge
+
 
 PY = sys.version_info
 PY3K = PY >= (3, 0, 0)
@@ -150,7 +152,7 @@ class SnaqlException(Exception):
 
 class Snaql(object):
 
-    def __init__(self, sql_root, sql_ns):
+    def __init__(self, sql_root, sql_ns, engine=enginge.default):
         self.sql_root = sql_root
         self.jinja_env = Environment(
             trim_blocks=True,
