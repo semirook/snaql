@@ -24,3 +24,4 @@ def pandas(query_string: str, connection_string: str):
         print(e)
     finally:
         connection.close()
+
