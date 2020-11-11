@@ -17,8 +17,8 @@ def pandas(query_string: str, connection_string: str):
     :param connection: Connection string formatted for use by PYODBC
     :return: A pandas DataFrame
     """
+    connection = pyodbc.connect(connection_string)
     try:
-        connection = pyodbc.Connection(connection_string)
         return pd.read_sql_query(query_string, connection)
     except Exception as e:
         print(e)

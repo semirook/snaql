@@ -229,7 +229,7 @@ class Snaql(object):
                 )
                 return self._engine(
                     query_string=sql_tmpl.render(**kwargs).strip(),
-                    connection=meta_struct['funcs'][name]['is_cond'],
+                    connection_string=meta_struct['funcs'][name]['connection_string'],
                 ) #TODO
 
             return meta_struct['funcs'][name]['sql']
