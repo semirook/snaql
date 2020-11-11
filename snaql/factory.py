@@ -76,7 +76,10 @@ class JinjaSQLExtension(Extension):
             if (
                 parser.stream.current.type == 'name' and
                 parser.stream.current.value in (
-                    'note', 'cond_for', 'depends_on'
+                    'note',
+                    'cond_for',
+                    'depends_on',
+                    'connection_string', #TODO
                 )
             ):
                 stream_type = parser.stream.current.value
@@ -122,6 +125,7 @@ class JinjaSQLExtension(Extension):
             'note': kwargs.get('note'),
             'is_cond': 'cond_for' in kwargs,
             'depends_on': kwargs.get('depends_on', []),
+            'connection_string': kwargs.get('connection_string'),#TODO
             'node': None,
         })
         if origin['is_cond']:
@@ -173,7 +177,6 @@ class Snaql(object):
         })
         self.jinja_env.extend(sql_params={})
         self._engine = engine
-        self._connection_string = None
 
     def gen_func(self, name, meta_struct, env):
 
@@ -226,8 +229,8 @@ class Snaql(object):
                 )
                 return self._engine(
                     query_string=sql_tmpl.render(**kwargs).strip(),
-                    connection=self._connection_string,
-                )
+                    connection=meta_struct['funcs'][name]['is_cond'],
+                ) #TODO
 
             return meta_struct['funcs'][name]['sql']
 
