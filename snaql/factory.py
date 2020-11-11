@@ -173,6 +173,7 @@ class Snaql(object):
         })
         self.jinja_env.extend(sql_params={})
         self._engine = engine
+        self._connection_string = None
 
     def gen_func(self, name, meta_struct, env):
 
@@ -223,7 +224,10 @@ class Snaql(object):
                 sql_tmpl = (
                     env.from_string(meta_struct['funcs'][name]['raw_sql'])
                 )
-                return sql_tmpl.render(**kwargs).strip()
+                return self._engine(
+                    query_string=sql_tmpl.render(**kwargs).strip(),
+                    connection=self._connection_string,
+                )
 
             return meta_struct['funcs'][name]['sql']
 
