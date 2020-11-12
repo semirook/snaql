@@ -1,33 +1,16 @@
-# Snaql. Raw \*QL queries in Python without pain [![Build Status](https://travis-ci.org/semirook/snaql.png)](https://travis-ci.org/semirook/snaql)
+# A SNAQL Based Query Engine
 
-Totally inspired by [Yesql](https://github.com/krisajenkins/yesql) from Clojure world. 
-But implemented in another way.
-
-## What?
-
-I totally agree with Yesql's author that SQL is already a mature DSL and great abstaction layer 
-for DB queries building. And we don't need another layer above SQL to work with RDBMS like ORMs 
-or complicated DSLs. Feel free to use all of the SQL's power in your projects without mixing Python 
-code and SQL strings. Solution is very simple and flexible enough to try it in your next project. 
-Also, Snaql doesn't depend on DB clients, can be used in asynchronous handlers (Tornado, for example). 
-It's just a way to organize your queries and a bit of logic to change them by context. Look at examples.
-
-Actually, Snaql doesn't care about stuff you want to build. SQL, SPARQL, SphinxQL, CQL etc., 
-you can build any query for any DB or search engine. Freedom.
+This project is a fork of the SNAQL project, where we hope to add the ability to pass in an optional function to 
+execute the query when the query is called (delivers the data instead of the query string). 
 
 ## Installation
 
-As usual, with pip:
-
-```bash
-$ pip install snaql
-```
+For now, you'll have to clone locally to use. We plan to have this available in PyPI, but this will be our first
+attempt. 
 
 ## Documentation
 
-You always can find the most recent docs with examples on [Snaql GitBook](https://semirook.gitbooks.io/snaql/content/)
+You always can find the most recent docs with examples for SNAQL on [Snaql GitBook](https://semirook.gitbooks.io/snaql/content/).
+Semirook's documents are fantastic, and the SQL templating is still the main knowlege you need.
+We will add the requirements for the SQL engine once we have the details worked out.
 
-
-Simple, without DB clients dependencies (use what you need). Try!
-
-Tested in Python 2.7, 3.3, 3.4, 3.5
