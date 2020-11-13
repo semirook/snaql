@@ -26,6 +26,8 @@ from snaql.convertors import (
     guard_timedelta,
 )
 
+import snaql.engine as engine
+
 
 PY = sys.version_info
 PY3K = PY >= (3, 0, 0)
@@ -74,7 +76,10 @@ class JinjaSQLExtension(Extension):
             if (
                 parser.stream.current.type == 'name' and
                 parser.stream.current.value in (
-                    'note', 'cond_for', 'depends_on'
+                    'note',
+                    'cond_for',
+                    'depends_on',
+                    'connection_string', #TODO
                 )
             ):
                 stream_type = parser.stream.current.value
@@ -120,6 +125,7 @@ class JinjaSQLExtension(Extension):
             'note': kwargs.get('note'),
             'is_cond': 'cond_for' in kwargs,
             'depends_on': kwargs.get('depends_on', []),
+            'connection_string': kwargs.get('connection_string'),#TODO
             'node': None,
         })
         if origin['is_cond']:
@@ -150,7 +156,7 @@ class SnaqlException(Exception):
 
 class Snaql(object):
 
-    def __init__(self, sql_root, sql_ns):
+    def __init__(self, sql_root, sql_ns, engine=engine.default):
         self.sql_root = sql_root
         self.jinja_env = Environment(
             trim_blocks=True,
@@ -170,6 +176,7 @@ class Snaql(object):
             'guards.bool': guard_bool,
         })
         self.jinja_env.extend(sql_params={})
+        self._engine = engine
 
     def gen_func(self, name, meta_struct, env):
 
@@ -220,7 +227,10 @@ class Snaql(object):
                 sql_tmpl = (
                     env.from_string(meta_struct['funcs'][name]['raw_sql'])
                 )
-                return sql_tmpl.render(**kwargs).strip()
+                return self._engine(
+                    query_string=sql_tmpl.render(**kwargs).strip(),
+                    connection_string=meta_struct['funcs'][name]['connection_string'],
+                ) #TODO
 
             return meta_struct['funcs'][name]['sql']
 

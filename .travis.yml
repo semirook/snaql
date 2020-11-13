@@ -9,4 +9,5 @@ script: nosetests -v
 install: python setup.py install
 notifications:
   email:
-    - semirook@gmail.com
+    - david.d.smit@gmail.com
+    - rfoley803@gmail.com
