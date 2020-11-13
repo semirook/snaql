@@ -182,7 +182,7 @@ class Snaql(object):
 
         def subrender_cond(owner_name, cond_func, context):
             if (
-                isinstance(cond_func, collections.Callable) and
+                isinstance(cond_func, collections.abc.Callable) and
                 cond_func.is_cond
             ):
                 cond_struct = meta_struct['funcs'][cond_func.func_name]
