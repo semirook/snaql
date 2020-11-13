@@ -5,9 +5,9 @@ from shutil import rmtree
 from setuptools import setup, find_packages, Command
 
 
-DESCRIPTION = 'Transparant *QL usage without ORM'
+DESCRIPTION = 'SNAQL (Templated SQL) with the ability to pull data.'
 HERE_PATH = os.path.dirname(os.path.abspath(__file__))
-VERSION = '0.4.2'
+VERSION = '0.0.0'
 
 
 try:
@@ -55,27 +55,27 @@ class UploadCommand(Command):
 
 
 setup(
-    name='snaql',
+    name='jinjaql',
     version=VERSION,
-    author='Roman Zaiev',
-    author_email='semirook@gmail.com',
+    author='Richard Foley and David Smit (based on the work of Roman Zaiev)',
+    author_email='david.d.smit@gmail.com',
     packages=find_packages(),
     license='MIT',
-    url='https://github.com/semirook/snaql',
+    url='https://github.com/RichFoley/jinjaql',
     description='Transparant *QL usage without ORM',
-    long_description=long_description,
+    long_description=DESCRIPTION,
     long_description_content_type='text/markdown',
     install_requires=[
         'Jinja2>=2.9.5',
         'schema>=0.6.5',
+        'pyodbc>=4.0.26',
+        'pandas>=1.0.5'
     ],
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
