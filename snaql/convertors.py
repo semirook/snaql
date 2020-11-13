@@ -119,7 +119,7 @@ def guard_case(value, items=None):
         return value
 
     items = items or set()
-    if not isinstance(items, collections.Iterable):
+    if not isinstance(items, collections.abc.Iterable):
         raise SnaqlGuardException('Guard items are not iterable')
 
     items = set(items)

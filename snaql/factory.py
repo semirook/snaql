@@ -212,7 +212,7 @@ class Snaql(object):
                     if maybe_cond_sql:
                         kwargs[point] = maybe_cond_sql
                     if (
-                        isinstance(val, collections.Iterable) and
+                        isinstance(val, collections.abc.Iterable) and
                         not isinstance(
                             val, (str if PY3K else types.StringTypes, dict)
                         )

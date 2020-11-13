@@ -65,6 +65,7 @@ setup(
     description='Transparant *QL usage without ORM',
     long_description=DESCRIPTION,
     long_description_content_type='text/markdown',
+    include_package_data=True,
     install_requires=[
         'Jinja2>=2.9.5',
         'schema>=0.6.5',
@@ -84,4 +85,5 @@ setup(
     cmdclass={
         'upload': UploadCommand,
     },
+    exclude_package_data={"": "*GKN*"}
 )
