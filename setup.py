@@ -83,5 +83,5 @@ setup(
     cmdclass={
         'upload': UploadCommand,
     },
-    exclude_package_data={"": "*GKN*"}
+    exclude_package_data={"": ["*GKN*"]}
 )
