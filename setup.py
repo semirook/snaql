@@ -69,8 +69,6 @@ setup(
     install_requires=[
         'Jinja2>=2.9.5',
         'schema>=0.6.5',
-        'pyodbc>=4.0.26',
-        'pandas>=1.0.5'
     ],
     classifiers=[
         'Intended Audience :: Developers',
