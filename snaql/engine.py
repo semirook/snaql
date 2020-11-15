@@ -1,6 +1,3 @@
-import pyodbc
-import pandas as pd
-
 def default(query_string: str, connection_string: str):
     """
     :param query_string: This is the raw query string that the SQL engine would use to return the data
