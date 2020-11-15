@@ -138,8 +138,5 @@ Temporary Items
 *.sublime-project
 .vscode
 
-<<<<<<< HEAD
 *GKN*
-=======
-*GKN*
->>>>>>> 871e76e22a9d47d85aa694d111ef19a210849578
+
