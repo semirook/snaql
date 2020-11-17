@@ -1,9 +1,10 @@
 # coding: utf-8
 import os
 import datetime
+import pathlib
 from schema import Schema, And, Use, SchemaError
-from snaql.factory import Snaql
-from snaql.convertors import guard_date, escape_string
+from jinjaql.factory import JinJAQL
+from jinjaql.convertors import guard_date, escape_string
 try:
     import unittest2 as unittest
 except ImportError:
@@ -14,7 +15,7 @@ class TestSchemaCases(unittest.TestCase):
 
     def setUp(self):
         self.sql_root = os.path.abspath(os.path.dirname(__file__))
-        self.snaql = Snaql(self.sql_root, 'queries')
+        self.snaql = JinJAQL(pathlib.Path(self.sql_root, 'queries'))
 
     def test_usual_case(self):
         news_queries = self.snaql.load_queries('unsafe_news.sql')
