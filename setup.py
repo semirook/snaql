@@ -7,7 +7,7 @@ from setuptools import setup, find_packages, Command
 
 DESCRIPTION = 'SNAQL (Templated SQL) with the ability to pull data.'
 HERE_PATH = os.path.dirname(os.path.abspath(__file__))
-VERSION = '0.0.0'
+VERSION = '0.0.2'
 
 
 try:
@@ -17,41 +17,41 @@ except IOError:
     long_description = DESCRIPTION
 
 
-class UploadCommand(Command):
-    """Support setup.py upload."""
-
-    description = 'Build and publish the package.'
-    user_options = []
-
-    @staticmethod
-    def status(s):
-        """Prints things in bold."""
-        print('\033[1m{0}\033[0m'.format(s))
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        try:
-            self.status('Removing previous builds…')
-            rmtree(os.path.join(HERE_PATH, 'dist'), ignore_errors=True)
-        except OSError:
-            pass
-
-        self.status('Building Source and Wheel (universal) distribution…')
-        os.system('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
-
-        self.status('Uploading the package to PyPI via Twine…')
-        os.system('twine upload dist/*')
-
-        self.status('Pushing git tags…')
-        os.system('git tag v{0}'.format(VERSION))
-        os.system('git push --tags')
-
-        sys.exit()
+# class UploadCommand(Command):
+#     """Support setup.py upload."""
+#
+#     description = 'Build and publish the package.'
+#     user_options = []
+#
+#     @staticmethod
+#     def status(s):
+#         """Prints things in bold."""
+#         print('\033[1m{0}\033[0m'.format(s))
+#
+#     def initialize_options(self):
+#         pass
+#
+#     def finalize_options(self):
+#         pass
+#
+#     def run(self):
+#         try:
+#             self.status('Removing previous builds…')
+#             rmtree(os.path.join(HERE_PATH, 'dist'), ignore_errors=True)
+#         except OSError:
+#             pass
+#
+#         self.status('Building Source and Wheel (universal) distribution…')
+#         os.system('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
+#
+#         self.status('Uploading the package to PyPI via Twine…')
+#         os.system('twine upload dist/*')
+#
+#         self.status('Pushing git tags…')
+#         os.system('git tag v{0}'.format(VERSION))
+#         os.system('git push --tags')
+#
+#         sys.exit()
 
 
 setup(
@@ -80,8 +80,8 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    cmdclass={
-        'upload': UploadCommand,
-    },
+    # cmdclass={
+    #     'upload': UploadCommand,
+    # },
     exclude_package_data={"": ["*GKN*"]}
 )
