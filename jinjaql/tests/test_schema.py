@@ -2,8 +2,8 @@
 import os
 import datetime
 from schema import Schema, And, Use, SchemaError
-from snaql.factory import Snaql
-from snaql.convertors import guard_date, escape_string
+from jinjaql.factory import Snaql
+from jinjaql.convertors import guard_date, escape_string
 try:
     import unittest2 as unittest
 except ImportError:

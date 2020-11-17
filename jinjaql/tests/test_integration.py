@@ -2,8 +2,8 @@
 import os
 import shutil
 import sqlite3
-from snaql.factory import Snaql
-import snaql.engine as engine
+from jinjaql.factory import Snaql
+import jinjaql.engine as engine
 import pandas as pd
 
 try:

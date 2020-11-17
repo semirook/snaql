@@ -13,7 +13,7 @@ from jinja2.loaders import split_template_path
 from jinja2.utils import open_if_exists
 from schema import Schema
 
-from snaql.convertors import (
+from jinjaql.convertors import (
     guard_bool,
     guard_case,
     guard_date,
@@ -26,7 +26,7 @@ from snaql.convertors import (
     guard_timedelta,
 )
 
-import snaql.engine as engine
+import jinjaql.engine as engine
 
 
 PY = sys.version_info
@@ -154,7 +154,7 @@ class SnaqlException(Exception):
     pass
 
 
-class Snaql(object):
+class JinJAQL(object):
 
     def __init__(self, sql_root, sql_ns, engine=engine.default):
         self.sql_root = sql_root

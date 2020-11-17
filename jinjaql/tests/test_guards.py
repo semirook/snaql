@@ -1,8 +1,8 @@
 # coding: utf-8
 import os
 import datetime
-from snaql.factory import Snaql, SnaqlException
-from snaql.convertors import SnaqlGuardException
+from jinjaql.factory import Snaql, SnaqlException
+from jinjaql.convertors import SnaqlGuardException
 try:
     import unittest2 as unittest
 except ImportError:

@@ -1,6 +1,6 @@
 # coding: utf-8
 import os
-from snaql.factory import Snaql, SnaqlException
+from jinjaql.factory import Snaql, SnaqlException
 try:
     import unittest2 as unittest
 except ImportError:
