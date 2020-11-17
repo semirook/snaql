@@ -1,7 +1,8 @@
 # coding: utf-8
 import os
 import datetime
-from jinjaql.factory import Snaql, SnaqlException
+import pathlib
+from jinjaql.factory import JinJAQL, SnaqlException
 from jinjaql.convertors import SnaqlGuardException
 try:
     import unittest2 as unittest
@@ -13,7 +14,7 @@ class TestGuards(unittest.TestCase):
 
     def setUp(self):
         self.sql_root = os.path.abspath(os.path.dirname(__file__))
-        self.snaql = Snaql(self.sql_root, 'queries')
+        self.snaql = JinJAQL(pathlib.Path(self.sql_root, 'queries'))
 
     def test_guards_normal(self):
         news_queries = self.snaql.load_queries('news.sql')

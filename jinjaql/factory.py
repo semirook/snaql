@@ -5,6 +5,7 @@ import collections
 import types
 import sys
 from collections import namedtuple
+import pathlib
 
 from jinja2 import nodes
 from jinja2 import Environment, TemplateNotFound, FileSystemLoader
@@ -156,12 +157,16 @@ class SnaqlException(Exception):
 
 class JinJAQL(object):
 
-    def __init__(self, sql_root, sql_ns, engine=engine.default):
-        self.sql_root = sql_root
+    def __init__(
+            self,
+            folder_path: pathlib.Path,
+            engine=engine.default,
+    ):
+        folder_path = pathlib.Path(folder_path)
         self.jinja_env = Environment(
             trim_blocks=True,
             extensions=[JinjaSQLExtension],
-            loader=RawFileSystemLoader(os.path.join(self.sql_root, sql_ns)),
+            loader=RawFileSystemLoader(folder_path)
         )
         self.jinja_env.filters.update({
             'guards.string': guard_string,

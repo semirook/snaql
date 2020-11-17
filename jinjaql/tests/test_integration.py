@@ -2,9 +2,8 @@
 import os
 import shutil
 import sqlite3
-from jinjaql.factory import Snaql
-import jinjaql.engine as engine
-import pandas as pd
+import pathlib
+from jinjaql.factory import JinJAQL
 
 try:
     import unittest2 as unittest
@@ -16,8 +15,7 @@ class TestIntegration(unittest.TestCase):
 
     def setUp(self):
         self.sql_root = os.path.abspath(os.path.dirname(__file__))
-        self.snaql = Snaql(self.sql_root, 'queries')
-        self.snaql_engine = Snaql(self.sql_root, 'queries', engine=engine.pandas)
+        self.snaql = JinJAQL(pathlib.Path(self.sql_root, 'queries'))
         self.sqlite_folder = os.path.join(self.sql_root, 'data')
         self.sqlite_path = os.path.join(self.sqlite_folder, 'test_db.sqlite')
         if not os.path.exists(self.sqlite_folder):

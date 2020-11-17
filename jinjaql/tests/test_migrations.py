@@ -1,6 +1,7 @@
 # coding: utf-8
 import os
-from jinjaql.factory import Snaql, SnaqlException
+import pathlib
+from jinjaql.factory import JinJAQL, SnaqlException
 try:
     import unittest2 as unittest
 except ImportError:
@@ -11,7 +12,7 @@ class TestMigrations(unittest.TestCase):
 
     def setUp(self):
         self.sql_root = os.path.abspath(os.path.dirname(__file__))
-        self.snaql = Snaql(self.sql_root, 'queries')
+        self.snaql = JinJAQL(pathlib.Path(self.sql_root, 'queries'))
 
     def test_guard_integer_exc(self):
         migrate_queries = self.snaql.load_queries('migrations.sql')
