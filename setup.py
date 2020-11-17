@@ -7,7 +7,7 @@ from setuptools import setup, find_packages, Command
 
 DESCRIPTION = 'SNAQL (Templated SQL) with the ability to pull data.'
 HERE_PATH = os.path.dirname(os.path.abspath(__file__))
-VERSION = '0.0.2'
+VERSION = '0.1.0'
 
 
 try:
