@@ -4,6 +4,7 @@ import copy
 import collections
 import types
 import sys
+import functools
 from collections import namedtuple
 import pathlib
 
@@ -161,6 +162,7 @@ class JinJAQL(object):
             self,
             folder_path: pathlib.Path,
             engine=engine.default,
+            cache=False,
     ):
         folder_path = pathlib.Path(folder_path)
         self.jinja_env = Environment(
@@ -182,6 +184,7 @@ class JinJAQL(object):
         })
         self.jinja_env.extend(sql_params={})
         self._engine = engine
+        self._cache = cache
 
     def gen_func(self, name, meta_struct, env):
 
@@ -242,8 +245,11 @@ class JinJAQL(object):
         fn.__doc__ = meta_struct['funcs'][name]['note']
         fn.is_cond = meta_struct['funcs'][name]['is_cond']
         fn.func_name = str(name)
-
-        return fn
+        if self._cache:
+            cache_fn = functools.lru_cache()(fn)
+            return cache_fn
+        else:
+            return fn
 
     def gen_dep_graph(self, node, accum):
         for edge in node.edges:
