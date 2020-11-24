@@ -208,7 +208,6 @@ class JinJAQL(object):
                 return cond_tmpl.render(**context).strip()
             return cond_func
 
-        @self._cache
         def fn(**kwargs):
             if meta_struct['funcs'][name]['is_cond']:
                 raise SnaqlException((
@@ -245,8 +244,7 @@ class JinJAQL(object):
                 connection_string=meta_struct['funcs'][name]['connection_string'],
             )
 
-            # return meta_struct['funcs'][name]['sql']
-
+        fn = self._cache()(fn)
         fn.__doc__ = meta_struct['funcs'][name]['note']
         fn.is_cond = meta_struct['funcs'][name]['is_cond']
         fn.func_name = str(name)
