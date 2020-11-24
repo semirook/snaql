@@ -237,12 +237,15 @@ class JinJAQL(object):
                 sql_tmpl = (
                     env.from_string(meta_struct['funcs'][name]['raw_sql'])
                 )
-                return self._engine(
-                    query_string=sql_tmpl.render(**kwargs).strip(),
-                    connection_string=meta_struct['funcs'][name]['connection_string'],
-                ) #TODO
+                rendered_sql = sql_tmpl.render(**kwargs).strip()
+            else:
+                rendered_sql = meta_struct['funcs'][name]['sql']
+            return self._engine(
+                query_string=rendered_sql,
+                connection_string=meta_struct['funcs'][name]['connection_string'],
+            )
 
-            return meta_struct['funcs'][name]['sql']
+            # return meta_struct['funcs'][name]['sql']
 
         fn.__doc__ = meta_struct['funcs'][name]['note']
         fn.is_cond = meta_struct['funcs'][name]['is_cond']
