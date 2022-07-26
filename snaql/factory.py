@@ -175,7 +175,7 @@ class Snaql(object):
 
         def subrender_cond(owner_name, cond_func, context):
             if (
-                isinstance(cond_func, collections.Callable) and
+                isinstance(cond_func, collections.abc.Callable) and
                 cond_func.is_cond
             ):
                 cond_struct = meta_struct['funcs'][cond_func.func_name]
@@ -205,7 +205,7 @@ class Snaql(object):
                     if maybe_cond_sql:
                         kwargs[point] = maybe_cond_sql
                     if (
-                        isinstance(val, collections.Iterable) and
+                        isinstance(val, collections.abc.Iterable) and
                         not isinstance(
                             val, (str if PY3K else types.StringTypes, dict)
                         )
