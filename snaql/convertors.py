@@ -1,7 +1,10 @@
 # coding: utf-8
 import re
-import collections
 
+try:
+    from collections.abc import Iterable
+except ImportError:
+    from collections import Iterable
 
 ESCAPE_REGEX = re.compile(r"[\0\n\r\032\'\"\\]")
 ESCAPE_MAP = {
@@ -119,7 +122,7 @@ def guard_case(value, items=None):
         return value
 
     items = items or set()
-    if not isinstance(items, collections.Iterable):
+    if not isinstance(items, Iterable):
         raise SnaqlGuardException('Guard items are not iterable')
 
     items = set(items)
