@@ -1,7 +1,6 @@
 # coding: utf-8
 import os
 import copy
-import collections
 import types
 import sys
 from collections import namedtuple
@@ -12,6 +11,11 @@ from jinja2.ext import Extension
 from jinja2.loaders import split_template_path
 from jinja2.utils import open_if_exists
 from schema import Schema
+
+try:
+    from collections.abc import Callable, Iterable
+except ImportError:
+    from collections import Callable, Iterable
 
 from snaql.convertors import (
     guard_bool,
@@ -175,7 +179,7 @@ class Snaql(object):
 
         def subrender_cond(owner_name, cond_func, context):
             if (
-                isinstance(cond_func, collections.Callable) and
+                isinstance(cond_func, Callable) and
                 cond_func.is_cond
             ):
                 cond_struct = meta_struct['funcs'][cond_func.func_name]
@@ -205,7 +209,7 @@ class Snaql(object):
                     if maybe_cond_sql:
                         kwargs[point] = maybe_cond_sql
                     if (
-                        isinstance(val, collections.Iterable) and
+                        isinstance(val, Iterable) and
                         not isinstance(
                             val, (str if PY3K else types.StringTypes, dict)
                         )
